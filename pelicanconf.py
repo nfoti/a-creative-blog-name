@@ -16,8 +16,9 @@ DEFAULT_DATE = u'fs'
 
 DEFAULT_PAGINATION = 10
 
-PREFIX = '/~nfoti/rn'
-MENUITEMS = [('Archives', os.path.join(PREFIX, 'archives.html')),
+# 'Tags' requres nfoti/tagpage-noside branch of pelican-octopress-theme
+MENUITEMS = [('Archives', 'archives.html'),
+             ('Tags', 'tags.html'),
              ('Home Page', 'http://nfoti.github.io')]
 
 THEME = "/Users/nfoti/src/pelican-themes/pelican-octopress-theme"
