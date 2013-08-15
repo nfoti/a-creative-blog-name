@@ -46,6 +46,11 @@ def main():
     filename = os.path.join(args.path, filename)
     filename = os.path.expanduser(filename)
 
+    if args.tags is None:
+        tag_str = ""
+    else:
+        tag_str = ", ".join(args.tags)
+
     if os.path.exists(filename):
         print("File already exists: %s" % (filename,))
     else:
@@ -54,11 +59,10 @@ def main():
             f.write("Date: %s\n" % (args.date,))
             f.write("Category: %s\n" % (args.category,))
             f.write("Tags: ")
-            tag_str = ", ".join(args.tags)
             f.write(tag_str + "\n")
             f.write("Slug: %s\n" % (args.slug,))
             f.write("Author: %s\n" % (args.author,))
-            f.write("\n")
+            f.write("\n\nYour post here!")
 
             print "Created new post at: %s" % (filename,)
 
