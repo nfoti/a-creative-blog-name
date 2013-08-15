@@ -6,14 +6,18 @@ AUTHOR = u'Nick Foti'
 SITENAME = u'Research Blog'
 SITEURL = ''
 
-TIMEZONE = 'America/New_York'
-
+TIMEZONE = 'US/Pacific'
 DEFAULT_LANG = u'en'
 
 DEFAULT_DATE = u'fs'
 
-THEME = "/Users/nfoti/src/pelican-themes/pelican-octopress-theme"
+DEFAULT_PAGINATION = 10
 
+
+MENUITEMS = [('Archives', '/archives.html'),
+             ('Home Page', 'http://nfoti.github.io')]
+
+THEME = "/Users/nfoti/src/pelican-themes/pelican-octopress-theme"
 PLUGIN_PATH = "/Users/nfoti/src/pelican-stuff/pelican-plugins"
 PLUGINS = ['liquid_tags.img', 'liquid_tags.video',
            'liquid_tags.include_code', 'liquid_tags.notebook']
@@ -32,17 +36,22 @@ CATEGORY_FEED_ATOM = None
 TRANSLATION_FEED_ATOM = None
 
 # Blogroll
-LINKS = (('Pelican', 'http://getpelican.com/'),
-         ('Python.org', 'http://python.org/'),
-         ('Jinja2', 'http://jinja.pocoo.org/'),
-         ('You can modify those links in your config file', '#'),)
+#LINKS = (('Pelican', 'http://getpelican.com/'),
+#         ('Python.org', 'http://python.org/'),
+#         ('Jinja2', 'http://jinja.pocoo.org/'),
+#         ('You can modify those links in your config file', '#'),)
+LINKS = ()
 
 # Social widget
 SOCIAL = (('github', 'http://github.com/nfoti'),)
-
-DEFAULT_PAGINATION = 5
-
 GITHUB_URL = "http://github.com/nfoti/"
+FACEBOOK_LIKE = False
+TWITTER_TWEET_BUTTON = False
+TWITTER_LATEST_TWEETS = False
+TWITTER_FOLLOW_BUTTON = False
+
+# Search
+SEARCH_BOX = True
 
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
