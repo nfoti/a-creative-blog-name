@@ -2,19 +2,22 @@
 # -*- coding: utf-8 -*- #
 from __future__ import unicode_literals
 
+import os
+
 AUTHOR = u'Nick Foti'
-SITENAME = u'Research Blog'
+SITENAME = u'Research Notebook'
 SITEURL = ''
 
 TIMEZONE = 'US/Pacific'
 DEFAULT_LANG = u'en'
 
+DEFAULT_DATE_FORMAT = u'%d %B %Y %I-%M %p'
 DEFAULT_DATE = u'fs'
 
 DEFAULT_PAGINATION = 10
 
-
-MENUITEMS = [('Archives', '/archives.html'),
+PREFIX = '/~nfoti/rn'
+MENUITEMS = [('Archives', os.path.join(PREFIX, 'archives.html')),
              ('Home Page', 'http://nfoti.github.io')]
 
 THEME = "/Users/nfoti/src/pelican-themes/pelican-octopress-theme"
@@ -40,7 +43,6 @@ TRANSLATION_FEED_ATOM = None
 #         ('Python.org', 'http://python.org/'),
 #         ('Jinja2', 'http://jinja.pocoo.org/'),
 #         ('You can modify those links in your config file', '#'),)
-LINKS = ()
 
 # Social widget
 SOCIAL = (('github', 'http://github.com/nfoti'),)
