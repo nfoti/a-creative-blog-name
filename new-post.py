@@ -28,7 +28,6 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('title')
     parser.add_argument('-a', '--author', default="Nick Foti")
-    parser.add_argument('-d', '--date')
     parser.add_argument('-c', '--category', default="")
     parser.add_argument('-t', '--tags', nargs='+')
     parser.add_argument('-s', '--slug')
@@ -36,8 +35,7 @@ def main():
 
     args = parser.parse_args()
 
-    if args.date is None:
-        args.date = datetime.date.today()
+    date = datetime.datetime.now()
 
     if args.slug is None:
         args.slug = args.title.lower().replace(" ", "-")
@@ -56,7 +54,9 @@ def main():
     else:
         with open(filename, 'w') as f:
             f.write("Title: %s\n" % (args.title,))
-            f.write("Date: %s\n" % (args.date,))
+            f.write("Date: %s %d:%d\n" % (date.date(),
+                                          date.time().hour,
+                                          date.time().minute))
             f.write("Category: %s\n" % (args.category,))
             f.write("Tags: ")
             f.write(tag_str + "\n")
