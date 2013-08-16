@@ -16,6 +16,9 @@ DEFAULT_DATE = u'fs'
 
 DEFAULT_PAGINATION = 10
 
+ARTICLE_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}/'
+ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}/index.html'
+
 # 'Tags' requres nfoti/tagpage-noside branch of pelican-octopress-theme
 MENUITEMS = [('Archives', 'archives.html'),
              ('Tags', 'tags.html'),
@@ -27,7 +30,7 @@ PLUGINS = ['liquid_tags.img', 'liquid_tags.video',
            'liquid_tags.include_code', 'liquid_tags.notebook']
 CODE_DIR = 'code'
 NOTEBOOK_DIR = 'notebooks'
-STATIC_PATHS = ['images', 'code']
+STATIC_PATHS = ['images', 'code', 'notebooks']
 
 try:
     EXTRA_HEADER = open('_nb_header.html').read().decode('utf-8')
