@@ -42,7 +42,7 @@ def main():
 
     # Use the slug as the filename so no spaces or weird characters in
     # filenames.
-    filename = "%s.md" % (args.slug,)
+    filename = "%s-%s.md" % (date.date(), args.slug,)
     filename = os.path.join(args.path, filename)
     filename = os.path.expanduser(filename)
 
