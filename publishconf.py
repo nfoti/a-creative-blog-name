@@ -10,7 +10,7 @@ import sys
 sys.path.append(os.curdir)
 from pelicanconf import *
 
-SITEURL = 'http://cs.dartmouth.edu/~nfoti/rn'
+SITEURL = 'http://cs.dartmouth.edu/~nfoti/blog'
 RELATIVE_URLS = True
 
 FEED_ALL_ATOM = 'feeds/all.atom.xml'

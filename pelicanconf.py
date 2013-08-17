@@ -5,7 +5,8 @@ from __future__ import unicode_literals
 import os
 
 AUTHOR = u'Nick Foti'
-SITENAME = u'Research Notebook'
+SITENAME = u'(A Creative Blog Name Here)'
+SITESUBTITLE = u'Code, math, and other things I find useful'
 SITEURL = ''
 
 TIMEZONE = 'US/Pacific'

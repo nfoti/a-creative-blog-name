@@ -15,7 +15,7 @@ FTP_TARGET_DIR=/
 SSH_HOST=tahoe.cs.dartmouth.edu
 SSH_PORT=22
 SSH_USER=nfoti
-SSH_TARGET_DIR=/net/grad/nfoti/public_html/rn
+SSH_TARGET_DIR=/net/grad/nfoti/public_html/blog
 
 S3_BUCKET=my_s3_bucket
 
