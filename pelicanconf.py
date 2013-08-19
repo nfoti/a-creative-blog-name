@@ -7,7 +7,7 @@ import os
 AUTHOR = u'Nick Foti'
 SITENAME = u'(A Creative Blog Name Here)'
 SITESUBTITLE = u'Code, math, and other things I find useful'
-SITEURL = ''
+SITEURL = 'http://cs.dartmouth.edu/~nfoti/blog'
 
 TIMEZONE = 'US/Pacific'
 DEFAULT_LANG = u'en'
@@ -21,8 +21,8 @@ ARTICLE_URL = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}/'
 ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%m}/{date:%d}/{slug}/index.html'
 
 # 'Tags' requres nfoti/tagpage-noside branch of pelican-octopress-theme
-MENUITEMS = [('Archives', 'archives.html'),
-             ('Tags', 'tags.html'),
+MENUITEMS = [('Archives', SITEURL + '/archives.html'),
+             ('Tags', SITEURL + '/tags.html'),
              ('Home Page', 'http://nfoti.github.io')]
 
 THEME = "/Users/nfoti/src/pelican-themes/pelican-octopress-theme"
