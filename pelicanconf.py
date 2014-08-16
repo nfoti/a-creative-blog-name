@@ -7,7 +7,7 @@ import os
 AUTHOR = u'Nick Foti'
 SITENAME = u'(A Creative Blog Name Here)'
 SITESUBTITLE = u'Code, math, and other things I find useful'
-SITEURL = 'http://cs.dartmouth.edu/~nfoti/blog'
+SITEURL = 'http://github.io/nfoti/blog-pelican'
 
 TIMEZONE = 'US/Pacific'
 DEFAULT_LANG = u'en'
