@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://github.io/nfoti/a-creative-blog-name/" rel="alternate"></link><link href="http://github.io/nfoti/a-creative-blog-name/feeds/nick-foti.atom.xml" rel="self"></link><id>http://github.io/nfoti/a-creative-blog-name/</id><updated>2013-08-19T13:54:00-07:00</updated><entry><title>Calling Rmath from cython (sometimes R just does it better)</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/" rel="alternate"></link><updated>2013-08-19T13:54:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2013-08-19:nfoti/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</id><summary type="html">&lt;p&gt;Recently I was writing some code that required the quantile function of the
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/nick-foti.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2013-08-19T13:54:00-07:00</updated><entry><title>Calling Rmath from cython (sometimes R just does it better)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/" rel="alternate"></link><updated>2013-08-19T13:54:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-08-19:a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</id><summary type="html">&lt;p&gt;Recently I was writing some code that required the quantile function of the
 chi-squared distribution.  There is a function in ccipy that implements this
 function, however, calling a python function from cython is slow.  The scipy
 implementation calls a function in the cephes library.  Unfortunately, scipy
@@ -14,7 +14,7 @@ functions available to cython code.  You need to build the Rmath library for
 standalone use first (having R on your system is not enough), but then you will
 be able to use nice R functions for your distributional needs.&lt;/p&gt;
 &lt;p&gt;See the &lt;a href="http://github.com/nfoti/cythonRMath"&gt;project page&lt;/a&gt; for more 
-information and examples.&lt;/p&gt;</summary><category term="cython"></category><category term="Rmath"></category></entry><entry><title>Types as function arguments in Julia</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/" rel="alternate"></link><updated>2013-06-27T12:25:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2013-06-27:nfoti/a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/</id><summary type="html">&lt;p&gt;The multiple dispatch mechanism in Julia makes passing types as arguments to
+information and examples.&lt;/p&gt;</summary><category term="cython"></category><category term="Rmath"></category></entry><entry><title>Types as function arguments in Julia</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/" rel="alternate"></link><updated>2013-06-27T12:25:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-06-27:a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/</id><summary type="html">&lt;p&gt;The multiple dispatch mechanism in Julia makes passing types as arguments to
 functions desirable.  This technique is sometimes referred to as "types as
 tags" and a contrived example is presented below.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;type&lt;/span&gt;&lt;span class="nc"&gt; A&lt;/span&gt;
@@ -28,7 +28,7 @@ tags" and a contrived example is presented below.&lt;/p&gt;
 
 &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="types as tags"></category></entry><entry><title>Cleaning Cython Build Files</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/" rel="alternate"></link><updated>2013-02-07T16:32:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2013-02-07:nfoti/a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/</id><summary type="html">&lt;p&gt;Whenever I use a setup.py script to build Cython code a variety of files are
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="types as tags"></category></entry><entry><title>Cleaning Cython Build Files</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/" rel="alternate"></link><updated>2013-02-07T16:32:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-02-07:a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/</id><summary type="html">&lt;p&gt;Whenever I use a setup.py script to build Cython code a variety of files are
 created including a &lt;code&gt;.so&lt;/code&gt; file, one or more &lt;code&gt;.c&lt;/code&gt; files and perhaps others.
 Until today I would delete these by hand as I did not have the patience to
 delve into what a setup.py file was actually doing and using the command
@@ -83,7 +83,7 @@ discussion.&lt;/p&gt;
 
 &lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmdclass&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;build_ext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;build_ext&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
       &lt;span class="n"&gt;ext_modules&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;cy_ext&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;</summary><category term="cython"></category></entry><entry><title>Matplotlib 3D plots in IPython</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/" rel="alternate"></link><updated>2012-12-14T10:13:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-12-14:nfoti/a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/</id><summary type="html">&lt;h3&gt;Summary:&lt;/h3&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="cython"></category></entry><entry><title>Matplotlib 3D plots in IPython</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/" rel="alternate"></link><updated>2012-12-14T10:13:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-12-14:a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/</id><summary type="html">&lt;h3&gt;Summary:&lt;/h3&gt;
 &lt;p&gt;Assume that&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -137,7 +137,7 @@ examples)&lt;/p&gt;
 &lt;p&gt;results in a blank figure on the screen.  In order to see the results one
 must manually draw the axes which can be done with the &lt;code&gt;plt.draw&lt;/code&gt; function
 (or with &lt;code&gt;plt.plot([],[])&lt;/code&gt;).  I have no idea why this is the case, but 
-hopefully it will be fixed at some point.&lt;/p&gt;</summary><category term="matplotlib"></category><category term="ipython"></category></entry><entry><title>Embedded gist appearance</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/" rel="alternate"></link><updated>2012-12-13T18:19:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-12-13:nfoti/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/</id><summary type="html">&lt;hr /&gt;
+hopefully it will be fixed at some point.&lt;/p&gt;</summary><category term="matplotlib"></category><category term="ipython"></category></entry><entry><title>Embedded gist appearance</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/" rel="alternate"></link><updated>2012-12-13T18:19:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-12-13:a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/</id><summary type="html">&lt;hr /&gt;
 &lt;p&gt;Some of the posts on this blog include embedded gists to display code.
 Apparently GitHub has changed something about gists and now the syntax
 highlighting is all messed up.  Hopefully there will be a fix in the 
@@ -148,7 +148,7 @@ gists in posts until this issue has been fixed.&lt;/p&gt;
 &lt;a href="https://github.com/imathis/octopress/issues/847"&gt;here&lt;/a&gt; that you can follow
 to be updated on any progress.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;Update:&lt;/em&gt; This blog doesn't use octopress anymore, so this may or may not 
-be a problem anymore.&lt;/p&gt;</summary></entry><entry><title>Building octopress blog with rake</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/" rel="alternate"></link><updated>2012-10-31T18:39:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-10-31:nfoti/a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/</id><summary type="html">&lt;p&gt;If you experience the symptoms in octopress issue
+be a problem anymore.&lt;/p&gt;</summary></entry><entry><title>Building octopress blog with rake</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/" rel="alternate"></link><updated>2012-10-31T18:39:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-10-31:a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/</id><summary type="html">&lt;p&gt;If you experience the symptoms in octopress issue
 &lt;a href="https://github.com/imathis/octopress/issues/759"&gt;#759&lt;/a&gt;, i.e. &lt;code&gt;rake
 generate&lt;/code&gt; breaks because &lt;code&gt;ffi&lt;/code&gt; tries to load &lt;code&gt;lib.dylib&lt;/code&gt;, you 
 should check that the shell you are trying to build your blog from &lt;/p&gt;
@@ -156,7 +156,7 @@ should check that the shell you are trying to build your blog from &lt;/p&gt;
 &lt;li&gt;is not running a tmux session (the wrong ruby will be used)&lt;/li&gt;
 &lt;li&gt;does not have a python virtualenv active (the wrong python will be used)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;This worked for me on OSX at least.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Extracting keys from Python dict into interpreter namespace</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/" rel="alternate"></link><updated>2012-10-31T10:36:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-10-31:nfoti/a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/</id><summary type="html">&lt;p&gt;I run a lot of experiments in ipython, the results of which I pickle and save
+&lt;p&gt;This worked for me on OSX at least.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Extracting keys from Python dict into interpreter namespace</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/" rel="alternate"></link><updated>2012-10-31T10:36:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-10-31:a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/</id><summary type="html">&lt;p&gt;I run a lot of experiments in ipython, the results of which I pickle and save
 to disk.  When I reload the results with pickle I end up with a dict whose keys
 are the variable names that I saved.  It is tedious to have to reference these
 values through the dict, what I would really like is behavior like &lt;code&gt;load&lt;/code&gt;
@@ -187,7 +187,7 @@ have to pass &lt;code&gt;globals()&lt;/code&gt; to the function explicitly as th
 in the function is not the IPython global namespace.  However, you can put the
 above code inside your ~/.ipython/profile_PROFILE/startup/startup.ipy file and
 it will work as expected.  PROFILE is the name of the profile that you plan to
-start IPython with.&lt;/p&gt;</summary><category term="ipython"></category></entry><entry><title>Cython and GSL made easy</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/08/14/cython-and-gsl-made-easy/" rel="alternate"></link><updated>2012-08-14T16:56:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-08-14:nfoti/a-creative-blog-name/posts/2012/08/14/cython-and-gsl-made-easy/</id><summary type="html">&lt;p&gt;I just found &lt;a href="https://github.com/twiecki/CythonGSL"&gt;CythonGSL&lt;/a&gt; on Github that
+start IPython with.&lt;/p&gt;</summary><category term="ipython"></category></entry><entry><title>Cython and GSL made easy</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/08/14/cython-and-gsl-made-easy/" rel="alternate"></link><updated>2012-08-14T16:56:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-08-14:a-creative-blog-name/posts/2012/08/14/cython-and-gsl-made-easy/</id><summary type="html">&lt;p&gt;I just found &lt;a href="https://github.com/twiecki/CythonGSL"&gt;CythonGSL&lt;/a&gt; on Github that
 wraps the GSL library for use with Cython.  Installation is simple&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/twiecki/CythonGSL.git 
 &lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;CythonGSL
@@ -198,7 +198,7 @@ wraps the GSL library for use with Cython.  Installation is simple&lt;/p&gt;
 
 &lt;p&gt;I have also added this to my behemoth 
 &lt;a href="/blog/2012/07/17/setting-up-virtualenv-for-data-analysis-on-osx/"&gt;instructions&lt;/a&gt;
-on setting up python.&lt;/p&gt;</summary><category term="cython"></category><category term="gsl"></category></entry><entry><title>Python build targets</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/07/25/python-build-targets/" rel="alternate"></link><updated>2012-07-25T09:30:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-07-25:nfoti/a-creative-blog-name/posts/2012/07/25/python-build-targets/</id><summary type="html">&lt;p&gt;While writing the code for my
+on setting up python.&lt;/p&gt;</summary><category term="cython"></category><category term="gsl"></category></entry><entry><title>Python build targets</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/25/python-build-targets/" rel="alternate"></link><updated>2012-07-25T09:30:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-25:a-creative-blog-name/posts/2012/07/25/python-build-targets/</id><summary type="html">&lt;p&gt;While writing the code for my
 &lt;a href="/blog/2012/07/24/cythonizing-instance-methods/"&gt;last&lt;/a&gt; 
 post on Cython I encountered something strange regarding distutils.  The code
 linked to the GSL library which on my machine (running OSX) is a unversal
@@ -218,7 +218,7 @@ due to using the wrong architecture when the 32-bit version is built.&lt;/p&gt;
 
 &lt;p&gt;This causes only the 64-bit version of the extension to be built.
 I'm sure there is a way to make distutils only build 64-bit versions by
-default, but I haven't found it yet.  When I do I will update the post.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Cythonizing instance methods</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/" rel="alternate"></link><updated>2012-07-24T20:45:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-07-24:nfoti/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/</id><summary type="html">&lt;p&gt;A large amount of my work involves writing MCMC samplers.  The models I work
+default, but I haven't found it yet.  When I do I will update the post.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Cythonizing instance methods</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/" rel="alternate"></link><updated>2012-07-24T20:45:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-24:a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/</id><summary type="html">&lt;p&gt;A large amount of my work involves writing MCMC samplers.  The models I work
 with have a lot of parameters and the samplers require a lot of state to be
 recorded.  Normally, I stuff all of the parameters and state into a Python
 class and implement the different steps of the sampler as instance methods.
@@ -274,7 +274,7 @@ function, but I think the point has been made (see
 &lt;a href="https://gist.github.com/757090"&gt;this&lt;/a&gt; for how to use GSL random numbers in
 Cython code). 
 {% gist 3173622 cy2fun.pyx %}
-and the corresponding Python code&lt;/p&gt;</summary><category term="cython"></category><category term="instance methods"></category></entry><entry><title>Using syntastic with vim (and a vim bug on OSX)</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/" rel="alternate"></link><updated>2012-07-22T13:21:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-07-22:nfoti/a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/</id><summary type="html">&lt;p&gt;Syntastic is a syntax checking plugin for vim that supports many different
+and the corresponding Python code&lt;/p&gt;</summary><category term="cython"></category><category term="instance methods"></category></entry><entry><title>Using syntastic with vim (and a vim bug on OSX)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/" rel="alternate"></link><updated>2012-07-22T13:21:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-22:a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/</id><summary type="html">&lt;p&gt;Syntastic is a syntax checking plugin for vim that supports many different
 languages.  I decided to give it a try in my current vim setup for my current
 projects written in python.  Additionally, I decided to try out 
 &lt;a href="http://pypi.python.org/pypi/flake8/"&gt;flake8&lt;/a&gt;, a wrapper for pyflakes, 
@@ -302,7 +302,7 @@ present.  Some simple workarounds are:&lt;/p&gt;
 &lt;li&gt;close the errors window before quitting vim&lt;/li&gt;
 &lt;li&gt;have multiple source files open &lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;The bug is still annoying though and will hopefully be fixed at some point.&lt;/p&gt;</summary><category term="vim"></category><category term="osx"></category><category term="syntastic"></category></entry><entry><title>IPython parallel</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/07/19/ipython-parallel/" rel="alternate"></link><updated>2012-07-19T14:01:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-07-19:nfoti/a-creative-blog-name/posts/2012/07/19/ipython-parallel/</id><summary type="html">&lt;p&gt;When I start IPython the first two commands I run are&lt;/p&gt;
+&lt;p&gt;The bug is still annoying though and will hopefully be fixed at some point.&lt;/p&gt;</summary><category term="vim"></category><category term="osx"></category><category term="syntastic"></category></entry><entry><title>IPython parallel</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/19/ipython-parallel/" rel="alternate"></link><updated>2012-07-19T14:01:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-19:a-creative-blog-name/posts/2012/07/19/ipython-parallel/</id><summary type="html">&lt;p&gt;When I start IPython the first two commands I run are&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;load_ext&lt;/span&gt; &lt;span class="n"&gt;autoreload&lt;/span&gt;
 &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;autoreload&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -322,7 +322,7 @@ Alternatively, we could use the autoreload extension&lt;/p&gt;
 
 &lt;p&gt;This will cause the engines to reload code before it tries to execute it.
 All of this assumes that the engines are using the same filesystem as the
-user's IPython session.&lt;/p&gt;</summary><category term="ipython"></category></entry><entry><title>Setting up python in virtualenv for data analysis on OSX</title><link href="http://github.io/nfoti/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/" rel="alternate"></link><updated>2012-07-17T14:35:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:github.io,2012-07-17:nfoti/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/</id><summary type="html">&lt;p&gt;I have decided to use python for my research code as I have become fed up with
+user's IPython session.&lt;/p&gt;</summary><category term="ipython"></category></entry><entry><title>Setting up python in virtualenv for data analysis on OSX</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/" rel="alternate"></link><updated>2012-07-17T14:35:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-17:a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/</id><summary type="html">&lt;p&gt;I have decided to use python for my research code as I have become fed up with
 needing an internet connection to work with Matlab and not being able to
 check out a license for toolboxes I need (e.g. the statistics toolbox) right
 before a paper deadline.  I have
