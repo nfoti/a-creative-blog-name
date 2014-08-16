@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Setting up python in virtualenv for data analysis on OSX</title>
+  <meta name="author" content="Nick Foti">
+
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="http://github.io/nfoti/a-creative-blog-name/favicon.png" rel="icon">
+  <link href="http://github.io/nfoti/a-creative-blog-name/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="http://github.io/nfoti/a-creative-blog-name/theme/js/modernizr-2.0.js"></script>
+  <script src="http://github.io/nfoti/a-creative-blog-name/theme/js/ender.js"></script>
+  <script src="http://github.io/nfoti/a-creative-blog-name/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="http://github.io/nfoti/a-creative-blog-name/">(A Creative Blog Name Here)</a></h1>
+    <h2>Code, math, and other things I find useful</h2>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+</ul>
+
+
+<form action="//google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:github.io/nfoti/a-creative-blog-name" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+
+<ul class="main-navigation">
+    <li><a href="http://github.io/nfoti/a-creative-blog-name/archives.html">Archives</a></li>
+    <li><a href="http://github.io/nfoti/a-creative-blog-name/tags.html">Tags</a></li>
+    <li><a href="http://nfoti.github.io">Home Page</a></li>
+    <li >
+    <a href="http://github.io/nfoti/a-creative-blog-name/category/julia.html">Julia</a>
+    </li>
+    <li >
+    <a href="http://github.io/nfoti/a-creative-blog-name/category/octopress.html">Octopress</a>
+    </li>
+    <li class="active">
+    <a href="http://github.io/nfoti/a-creative-blog-name/category/python.html">Python</a>
+    </li>
+    <li >
+    <a href="http://github.io/nfoti/a-creative-blog-name/category/vim.html">Vim</a>
+    </li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Setting up python in virtualenv for data analysis on OSX</h1>
+      <p class="meta"><time datetime="2012-07-17T14:35:00" pubdate>17 July 2012 02-35 PM</time></p>
+</header>
+
+  <div class="entry-content"><p>I have decided to use python for my research code as I have become fed up with
+needing an internet connection to work with Matlab and not being able to
+check out a license for toolboxes I need (e.g. the statistics toolbox) right
+before a paper deadline.  I have
+used python for while for munging raw data for input to Matlab, but have just
+recently felt that I could work with python as effectively as I could with
+Matlab.</p>
+<p>I wanted my Python installation to use the newest versions of the various
+modules used for data analysis (e.g. numpy,
+scipy, ipython, matplotlib, etc.).  Since I already had the source for many of
+these projects I decided to build the current master branches (after a git pull
+to get the latest sources) with all of the bells and whistles like the ipython
+qt console and notebook.  Additionally, I wanted to put everything in a
+virtualenv to isolate it from my system Python in case I broke anything.  In
+the process I ran into a few problems and eventually figured out how to get a
+working system, in this post I want to document the process in case I need to
+reinstall any of it in the future.</p>
+<!-- more -->
+
+<p><strong>Note</strong>: Not everything is built from source, the main modules I work with
+are, but some dependencies are installed with pip.  Additionally, I assume
+that you will be using python 2.7 and that the directory where you store source
+code is SRC, the directory with virtualenvs is VENV and the name of the
+virtualenv is myvenv (you should name yours something meaningful though).
+Also, it is assumed that all <code>git clone ...</code> commands should be run
+in the SRC directory.</p>
+<h4>Install virtualenv and virtualenv wrapper.</h4>
+<p>There are a number of introductions on this.  The one
+<a href="http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/">here</a>
+is good.</p>
+<h4>Create a virtualenv</h4>
+<p>virtualenvwrapper makes this really easy, see the documentation for 
+instructions.  Name it whatever you'd like.  As long as it is active 
+any modules you install (via pip or setup.py install) will be installed 
+for that python.</p>
+<h4>IMPORTANT: Fix the python executable</h4>
+<p>virtualenv only copies the python executable, however, for the application
+manager in OSX to recognize running python processes then, python must be 
+called from an application bundle (also see pythonw in the python framework).<br />
+This step is necessary so that figures opened with matplotlib can be brought 
+to the front via cmd-tab (or clicking the icon in the dock).  If this step 
+is not performed then matplotlib figures open behind all other windows and 
+the only way to find them is to move all open windows.</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/gldnspud/virtualenv-pythonw-osx.git
+<span class="nv">$ </span>python install_pythonw.py <span class="sb">`</span>which python<span class="sb">`</span>/../..
+</pre></div>
+
+
+<h4>numpy</h4>
+<p _="%" endcodeblock="endcodeblock">{% codeblock lang:bash %}
+$ cd your/src/directory
+$ git clone git://github.com/numpy/numpy.git  # or git pull
+$ cd numpy
+$ python setup.py build
+$ python setup.py install</p>
+<h4>nose</h4>
+<p _="%" endcodeblock="endcodeblock">{% codeblock lang:bash %}
+$ pip install nose</p>
+<h4>Test numpy</h4>
+<div class="highlight"><pre>    python -c <span class="s1">&#39;import numpy; numpy.test()&#39;</span>
+</pre></div>
+
+
+<h4>scipy</h4>
+<p _="%" endcodeblock="endcodeblock">{% codeblock lang:bash %}
+$ cd your/src/directory
+$ git clone git://github.com/scipy/scipy.git  # or git pull
+$ cd scipy 
+$ python setup.py build
+$ python setup.py install
+$ python -c 'import scipy; scipy.test()'</p>
+<h4>readline</h4>
+<p>{% codeblock lang:bash %}
+$ easy_install readline
+{% endcodeblock %}
+We use easy_install because readline won't be picked up if we install it
+with pip.</p>
+<h4>Install other dependencies</h4>
+<p _="%" _endcodeblock="%endcodeblock">{% codeblock lang:bash %}
+$ pip install python-dateutil sphinx pygments tornado</p>
+<h4>Install the ZMQ library</h4>
+<p>Describing how is beyond the scope of this post,
+but there is a lot of information available elsewhere.  </p>
+<h4>pyzmq</h4>
+<p _="%" endcodeblock_="endcodeblock%">{% codeblock lang:bash %}
+$ pip install pyzmq</p>
+<h4>Install PySide system-wide</h4>
+<p>There is a dmg to do this, instructions for which can be found online.<br />
+Then create a symbolic link in this virtualenv to the system installation</p>
+<div class="highlight"><pre>    ln -s path-to-sys-PySide VENV/myvenv/lib/python2.7/site-packages/PySide
+</pre></div>
+
+
+<h4>ipython</h4>
+<p>By default the build script will use the system installation of python.<br />
+Instead, use the following so that the correct version of python is used.</p>
+<div class="highlight"><pre>    python setup.py build --executable <span class="s2">&quot;VENV/myvenv/bin/python&quot;</span> 
+    python setup.py install
+</pre></div>
+
+
+<p>See <a href="https://github.com/ipython/ipython/issues/1171">this</a> discussion for more
+information.  Alternatively <code>`which python`</code> can be 
+used to specify the executable.</p>
+<p>Also, install mathjax if you'd like for the notebook.  In an IPython session
+run</p>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">IPython.external.mathjax</span> <span class="kn">import</span> <span class="n">install_mathjax</span>
+<span class="n">install_mathjax</span><span class="p">()</span>
+</pre></div>
+
+
+<p>You should now have a working ipython with qtconsole and notebook
+functionality (though you can't plot yet until we've installed matplotlib).</p>
+<h4>matplotlib</h4>
+<p>Building matplotlib on OSX is a pain.  Installing using pip might be best</p>
+<div class="highlight"><pre><span class="nv">$ </span>pip install -e https://github.com/matplotlib/matplotlib.git#egg<span class="o">=</span>Package
+</pre></div>
+
+
+<p>However, if you really want to build matplotlib from source then</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/matplotlib/matplotlib.git
+</pre></div>
+
+
+<p>and follow the instructions in README.osx and make.osx</p>
+<h4>cython</h4>
+<p>I chose to build the latest stable version of cython rather than the master
+branch since so many other modules use it.</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/cython/cython.git
+<span class="nv">$ </span>make <span class="nb">local</span>
+<span class="nv">$ </span>python setup.py install
+<span class="nv">$ </span>python runtests.py -vv
+</pre></div>
+
+
+<p>Just a heads up that the tests take a <em>very</em> long time to run.</p>
+<h4>scikit-learn</h4>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/scikit-learn/scikit-learn.git
+<span class="nv">$ </span>make all
+<span class="nv">$ </span>python setup.py install
+</pre></div>
+
+
+<p><strong>Update:</strong> If building scikit-learn from source it is better to not install it
+system-wide with the last line about, but rather add the directory to the
+repository to your PYTHONPATH after the <code>make all</code>.</p>
+<h4>pandas</h4>
+<p>First install the dependencies.</p>
+<h5>numexpr</h5>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/erdc-cm/numexpr.git
+<span class="nv">$ </span>python setup.py build
+<span class="nv">$ </span>python setup.py install
+<span class="nv">$ </span>python -c <span class="s2">&quot;import numexpr; numexpr.test()&quot;</span>
+</pre></div>
+
+
+<h5>PyTables</h5>
+<p>Make sure that you have the HDF5 libraries installed on your system and
+that they are on PATH.  Then, clone the repository from github and follow the
+instructions reproduced below</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/PyTables/PyTables.git
+<span class="nv">$ </span>python setup.py build_ext --inplace
+<span class="nv">$ </span>python -c <span class="s1">&#39;import tables; tables.test()&#39;</span>
+<span class="nv">$ </span>python setup.py install
+</pre></div>
+
+
+<h4>h5py</h4>
+<p>I've also found it useful to have h5py built as well for easily loading 
+version 7.3 mat files.  Do this as follows</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/qsnake/h5py.git
+<span class="nv">$ </span><span class="nb">cd </span>h5py
+<span class="nv">$ </span>python setup.py build --hdf5<span class="o">=</span>/usr/local
+<span class="nv">$ </span>python setup.py install
+</pre></div>
+
+
+<p>You should replace <code>usr/local</code> above with the path that contains
+the <code>include</code>, <code>lib</code>, etc. directories of your HDF5
+installation.</p>
+<h5>rpy2</h5>
+<div class="highlight"><pre><span class="nv">$ </span>pip install rpy2
+</pre></div>
+
+
+<p>Now, we can build and install pandas.</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/pydata/pandas.git
+<span class="nv">$ </span>python setup.py build_ext --inplace
+<span class="nv">$ </span>nosetests pandas
+<span class="nv">$ </span>python setup.py install
+</pre></div>
+
+
+<p><strong>Update:</strong> Again, rather than installing you can just build in place and add
+the path to the pandas repository to your PYTHONPATH.  This way every time you
+pull a new version and build it you will see the effects immediately.</p>
+<h4>statsmodels</h4>
+<p>First we install the patsy module which statsmodels uses for formulas</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/pydata/patsy.git
+<span class="nv">$ </span>python setup.py install
+</pre></div>
+
+
+<p>Then, statsmodels itself</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/statsmodels/statsmodels.git
+<span class="nv">$ </span>python setup.py install
+</pre></div>
+
+
+<h4>PyMC</h4>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/pymc-devs/pymc.git
+<span class="nv">$ </span>python setup.py config_fc --fcompiler gnu95 build
+<span class="nv">$ </span>python setup.py install
+<span class="nv">$ </span>python -c <span class="s1">&#39;import pymc; pymc.test()&#39;</span>
+</pre></div>
+
+
+<h4>bottleneck</h4>
+<p>This modulde contains cythonized versions of certain numpy functions to speed
+them up including nansum, etc.  By now the drill is standard.
+Beware, this takes a very long time to build on my laptop.</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/kwgoodman/bottleneck.git
+<span class="nv">$ </span>python setup.py install
+<span class="nv">$ </span>python -c <span class="s1">&#39;import bottleneck; bottleneck.test()&#39;</span>
+</pre></div>
+
+
+<h4>CythonGSL</h4>
+<p>This wraps the GSL library for use with Cython.  This is handy if you need
+things like the gamma function, or you can use it to generate random numbers
+(just be careful if you're also using np.random also) .</p>
+<div class="highlight"><pre><span class="nv">$ </span>git clone git://github.com/twiecki/CythonGSL.git 
+<span class="nv">$ </span><span class="nb">cd </span>CythonGSL
+<span class="nv">$ </span>python setup.py build
+<span class="nv">$ </span>python setup.py install
+</pre></div>
+
+
+<h4>Finished</h4>
+<p>Ok, that's it, we have a pretty complete system for data analysis and research.</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Nick Foti</span>
+  </span>
+<time datetime="2012-07-17T14:35:00" pubdate>17 July 2012 02-35 PM</time>  <span class="categories">
+    <a class="category" href="http://github.io/nfoti/a-creative-blog-name/tag/virtualenv.html">virtualenv</a>
+    <a class="category" href="http://github.io/nfoti/a-creative-blog-name/tag/osx.html">osx</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="http://github.io/nfoti/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/">Calling Rmath from cython (sometimes R just does it better)</a>
+      </li>
+      <li class="post">
+          <a href="http://github.io/nfoti/a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/">Types as function arguments in Julia</a>
+      </li>
+      <li class="post">
+          <a href="http://github.io/nfoti/a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/">Cleaning Cython Build Files</a>
+      </li>
+      <li class="post">
+          <a href="http://github.io/nfoti/a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/">Matplotlib 3D plots in IPython</a>
+      </li>
+      <li class="post">
+          <a href="http://github.io/nfoti/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/">Embedded gist appearance</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="http://github.io/nfoti/a-creative-blog-name/category/julia.html">Julia</a></li>
+        <li><a href="http://github.io/nfoti/a-creative-blog-name/category/octopress.html">Octopress</a></li>
+        <li><a href="http://github.io/nfoti/a-creative-blog-name/category/python.html">Python</a></li>
+        <li><a href="http://github.io/nfoti/a-creative-blog-name/category/vim.html">Vim</a></li>
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+    <a href="http://github.io/nfoti/a-creative-blog-name/tag/.html"></a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/cython.html">cython</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/osx.html">osx</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/rmath.html">Rmath</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/syntastic.html">syntastic</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/matplotlib.html">matplotlib</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/vim.html">vim</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/types-as-tags.html">types as tags</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/ipython.html">ipython</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/virtualenv.html">virtualenv</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/instance-methods.html">instance methods</a>,    <a href="http://github.io/nfoti/a-creative-blog-name/tag/gsl.html">gsl</a>  </section>
+
+
+    <section>
+        <h1>Social</h1>
+        <ul>
+            <li><a href="http://github.com/nfoti" target="_blank">github</a></li>
+        </ul>
+    </section>
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2012-2013  - Nick Foti -
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+</body>
+</html>
