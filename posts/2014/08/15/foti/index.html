@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Types as function arguments in Julia</title>
+  <title>Migrating Blog to Github Pages</title>
   <meta name="author" content="Nick Foti">
 
 
@@ -47,10 +47,10 @@
     <li><a href="http://nfoti.github.io/a-creative-blog-name/archives.html">Archives</a></li>
     <li><a href="http://nfoti.github.io/a-creative-blog-name/tags.html">Tags</a></li>
     <li><a href="http://nfoti.github.io">Home Page</a></li>
-    <li >
+    <li class="active">
     <a href="http://nfoti.github.io/a-creative-blog-name/category/blog.html">Blog</a>
     </li>
-    <li class="active">
+    <li >
     <a href="http://nfoti.github.io/a-creative-blog-name/category/julia.html">Julia</a>
     </li>
     <li >
@@ -68,32 +68,46 @@
 <div>
   <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">Types as function arguments in Julia</h1>
-      <p class="meta"><time datetime="2013-06-27T12:25:00" pubdate>27 June 2013 12-25 PM</time></p>
+      <h1 class="entry-title">Migrating Blog to Github Pages</h1>
+      <p class="meta"><time datetime="2014-08-15T20:43:00" pubdate>15 August 2014 08-43 PM</time></p>
 </header>
 
-  <div class="entry-content"><p>The multiple dispatch mechanism in Julia makes passing types as arguments to
-functions desirable.  This technique is sometimes referred to as "types as
-tags" and a contrived example is presented below.</p>
-<div class="highlight"><pre><span class="k">type</span><span class="nc"> A</span>
-<span class="k">end</span>
+  <div class="entry-content"><p>The account at my former institution was recently deleted.  Unfortunately, I
+was hosting this blog there and so I was forced to migrate it somewhere else.
+I have always wanted to host the blog on Github Pages (where my site is hosted)
+and this seemed like good enough excuse to finally do this.  I wanted to record
+the small hiccups I ran into.</p>
+<p>Previously I could build the blog content with <code>make html</code>, however, this did
+not work anymore on Github Pages.  Strangely, the command <code>pelican -s
+pelicanconf.py .</code> does work, so I updated the <code>html</code> rule in <code>Makefile</code> to use
+the <code>pelican</code> command.</p>
+<p>In order for Github to render the blog the files in the <code>output/</code> directory
+must be pushed to the <code>gh-pages</code> branch (the blog source is on <code>master</code>).  The
+Pelican documentation suggests using the <code>ghp-import</code> script (install with <code>pip
+install ghp-import</code>) in order to automatically set up the necessary branches.
+Then we can just push to the <code>gh-pages</code> branch.</p>
+<p>The full pipeline to generate the blog content is now (note <code>make html</code> has
+been updated):</p>
+<div class="highlight"><pre><span class="n">make</span> <span class="n">html</span>
+<span class="n">ghp</span><span class="o">-</span><span class="n">import</span> <span class="n">output</span>
+<span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">gh</span><span class="o">-</span><span class="n">pages</span>
+</pre></div>
 
-<span class="k">type</span><span class="nc"> B</span>
-<span class="k">end</span>
 
-<span class="n">f</span><span class="p">(::</span><span class="n">Type</span><span class="p">{</span><span class="n">A</span><span class="p">})</span> <span class="o">=</span> <span class="n">println</span><span class="p">(</span><span class="s">&quot;f with type A&quot;</span><span class="p">)</span>
-<span class="n">f</span><span class="p">(::</span><span class="n">Type</span><span class="p">{</span><span class="n">B</span><span class="p">})</span> <span class="o">=</span> <span class="n">println</span><span class="p">(</span><span class="s">&quot;f with type B&quot;</span><span class="p">)</span>
-
-<span class="n">f</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="n">f</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
-</pre></div></div>
+<p>As the Pelican documentation suggests these steps can be added to a post-commit
+hook.</p></div>
     <footer>
 <p class="meta">
   <span class="byline author vcard">
-    Posted by <span class="fn">Nick Foti</span>
+    Posted by <span class="fn">Nick</span>
   </span>
-<time datetime="2013-06-27T12:25:00" pubdate>27 June 2013 12-25 PM</time>  <span class="categories">
-    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/types-as-tags.html">types as tags</a>
+<time datetime="2014-08-15T20:43:00" pubdate>15 August 2014 08-43 PM</time>  <span class="categories">
+    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/github-pages.html">github-pages</a>
+    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/migrating.html">Migrating</a>
+    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/blog.html">Blog</a>
+    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/to.html">to</a>
+    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/github.html">Github</a>
+    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/pages.html">Pages</a>
   </span>
 </p><div class="sharing">
 </div>    </footer>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/nick.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2014-08-15T20:43:00-07:00</updated><entry><title>Migrating Blog to Github Pages</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2014/08/15/foti/" rel="alternate"></link><updated>2014-08-15T20:43:00-07:00</updated><author><name>Nick</name></author><id>tag:nfoti.github.io,2014-08-15:a-creative-blog-name/posts/2014/08/15/foti/</id><summary type="html">&lt;p&gt;The account at my former institution was recently deleted.  Unfortunately, I
+was hosting this blog there and so I was forced to migrate it somewhere else.
+I have always wanted to host the blog on Github Pages (where my site is hosted)
+and this seemed like good enough excuse to finally do this.  I wanted to record
+the small hiccups I ran into.&lt;/p&gt;
+&lt;p&gt;Previously I could build the blog content with &lt;code&gt;make html&lt;/code&gt;, however, this did
+not work anymore on Github Pages.  Strangely, the command &lt;code&gt;pelican -s
+pelicanconf.py .&lt;/code&gt; does work, so I updated the &lt;code&gt;html&lt;/code&gt; rule in &lt;code&gt;Makefile&lt;/code&gt; to use
+the &lt;code&gt;pelican&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;In order for Github to render the blog the files in the &lt;code&gt;output/&lt;/code&gt; directory
+must be pushed to the &lt;code&gt;gh-pages&lt;/code&gt; branch (the blog source is on &lt;code&gt;master&lt;/code&gt;).  The
+Pelican documentation suggests using the &lt;code&gt;ghp-import&lt;/code&gt; script (install with &lt;code&gt;pip
+install ghp-import&lt;/code&gt;) in order to automatically set up the necessary branches.
+Then we can just push to the &lt;code&gt;gh-pages&lt;/code&gt; branch.&lt;/p&gt;
+&lt;p&gt;The full pipeline to generate the blog content is now (note &lt;code&gt;make html&lt;/code&gt; has
+been updated):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;html&lt;/span&gt;
+&lt;span class="n"&gt;ghp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="n"&gt;output&lt;/span&gt;
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;push&lt;/span&gt; &lt;span class="n"&gt;origin&lt;/span&gt; &lt;span class="n"&gt;gh&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pages&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As the Pelican documentation suggests these steps can be added to a post-commit
+hook.&lt;/p&gt;</summary><category term="github-pages"></category><category term="Migrating"></category><category term="Blog"></category><category term="to"></category><category term="Github"></category><category term="Pages"></category></entry></feed>

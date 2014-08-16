@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Types as function arguments in Julia</title>
+  <title>(A Creative Blog Name Here)</title>
   <meta name="author" content="Nick Foti">
 
 
@@ -47,10 +47,10 @@
     <li><a href="http://nfoti.github.io/a-creative-blog-name/archives.html">Archives</a></li>
     <li><a href="http://nfoti.github.io/a-creative-blog-name/tags.html">Tags</a></li>
     <li><a href="http://nfoti.github.io">Home Page</a></li>
-    <li >
+    <li class="active">
     <a href="http://nfoti.github.io/a-creative-blog-name/category/blog.html">Blog</a>
     </li>
-    <li class="active">
+    <li >
     <a href="http://nfoti.github.io/a-creative-blog-name/category/julia.html">Julia</a>
     </li>
     <li >
@@ -65,59 +65,33 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article class="hentry" role="article">
+<div class="blog-index">
+  		<article>
 <header>
-      <h1 class="entry-title">Types as function arguments in Julia</h1>
-      <p class="meta"><time datetime="2013-06-27T12:25:00" pubdate>27 June 2013 12-25 PM</time></p>
+      <h1 class="entry-title">
+        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2014/08/15/foti/">Migrating Blog to Github Pages</a>
+      </h1>
+      <p class="meta"><time datetime="2014-08-15T20:43:00" pubdate>15 August 2014 08-43 PM</time></p>
 </header>
 
-  <div class="entry-content"><p>The multiple dispatch mechanism in Julia makes passing types as arguments to
-functions desirable.  This technique is sometimes referred to as "types as
-tags" and a contrived example is presented below.</p>
-<div class="highlight"><pre><span class="k">type</span><span class="nc"> A</span>
-<span class="k">end</span>
+  <div class="entry-content"><p>The account at my former institution was recently deleted.  Unfortunately, I
+was hosting this blog there and so I was forced to migrate it somewhere else.
+I have always wanted to host the blog on Github Pages (where my site is hosted)
+and this seemed like good enough excuse to ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2014/08/15/foti/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
 
-<span class="k">type</span><span class="nc"> B</span>
-<span class="k">end</span>
-
-<span class="n">f</span><span class="p">(::</span><span class="n">Type</span><span class="p">{</span><span class="n">A</span><span class="p">})</span> <span class="o">=</span> <span class="n">println</span><span class="p">(</span><span class="s">&quot;f with type A&quot;</span><span class="p">)</span>
-<span class="n">f</span><span class="p">(::</span><span class="n">Type</span><span class="p">{</span><span class="n">B</span><span class="p">})</span> <span class="o">=</span> <span class="n">println</span><span class="p">(</span><span class="s">&quot;f with type B&quot;</span><span class="p">)</span>
-
-<span class="n">f</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="n">f</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
-</pre></div></div>
-    <footer>
-<p class="meta">
-  <span class="byline author vcard">
-    Posted by <span class="fn">Nick Foti</span>
-  </span>
-<time datetime="2013-06-27T12:25:00" pubdate>27 June 2013 12-25 PM</time>  <span class="categories">
-    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/types-as-tags.html">types as tags</a>
-  </span>
-</p><div class="sharing">
-</div>    </footer>
-  </article>
-
-</div>
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
           <a href="http://nfoti.github.io/a-creative-blog-name/posts/2014/08/15/foti/">Migrating Blog to Github Pages</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/">Calling Rmath from cython (sometimes R just does it better)</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/">Types as function arguments in Julia</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/">Cleaning Cython Build Files</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/">Matplotlib 3D plots in IPython</a>
       </li>
     </ul>
   </section>
@@ -149,7 +123,7 @@ tags" and a contrived example is presented below.</p>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2012-2014  - Nick Foti -
+    Copyright &copy;  2014  - Nick Foti -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
 </body>
