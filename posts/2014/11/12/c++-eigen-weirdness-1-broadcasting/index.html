@@ -120,7 +120,8 @@ make a mathematically innocuous change so that the last line becomes</p>
 <p>then the code no longer compiles with an error saying that <code>operator*</code> is not
 defined for the types of <code>a.transpose()</code> and <code>A.rowwise()</code>.  To
 reiterate the main point: <em>when broadcasting, the visitor must be on the left
-hand side of the operator being used</em>.</p>
+hand side of the operator being used</em>.  This is not the case with both Matlab
+or python where <code>repmat(a, 2, 1) .* A</code> and <code>a * A</code> will work as well.</p>
 <p>Hopefully, this is just an oversight and there is an easy fix, and not a
 shortcoming of the expression generation that Eigen performs.</p><script type= "text/javascript">
     if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {

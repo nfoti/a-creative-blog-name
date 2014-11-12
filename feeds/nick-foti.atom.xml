@@ -44,7 +44,8 @@ make a mathematically innocuous change so that the last line becomes&lt;/p&gt;
 &lt;p&gt;then the code no longer compiles with an error saying that &lt;code&gt;operator*&lt;/code&gt; is not
 defined for the types of &lt;code&gt;a.transpose()&lt;/code&gt; and &lt;code&gt;A.rowwise()&lt;/code&gt;.  To
 reiterate the main point: &lt;em&gt;when broadcasting, the visitor must be on the left
-hand side of the operator being used&lt;/em&gt;.&lt;/p&gt;
+hand side of the operator being used&lt;/em&gt;.  This is not the case with both Matlab
+or python where &lt;code&gt;repmat(a, 2, 1) .* A&lt;/code&gt; and &lt;code&gt;a * A&lt;/code&gt; will work as well.&lt;/p&gt;
 &lt;p&gt;Hopefully, this is just an oversight and there is an easy fix, and not a
 shortcoming of the expression generation that Eigen performs.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
     if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
