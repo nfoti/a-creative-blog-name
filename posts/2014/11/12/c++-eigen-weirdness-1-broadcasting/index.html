@@ -81,8 +81,8 @@ There are a lot of great things about Eigen, however, there are some hang-ups
 I have run into that do not seem to be documented anywhere.  As I run into
 these issues I am going to document how to deal with them.</p>
 <p>This post focuses on some peculiar broadcasting syntax, specifically, that the
-visitor <em>needs to appear on the left hand side of the operation that is
-broadcasting</em>.  This feature conflicts with math in that scalar multiplication
+visitor <strong>needs to appear on the left hand side of the operation that is
+broadcasting</strong>.  This feature conflicts with math in that scalar multiplication
 is commutative, i.e. $x * y = y * x$ and so is actually hard to track down from
 the compiler error.</p>
 <p>As a concrete example, we consider a similar example that mimics the use-case
@@ -119,8 +119,8 @@ make a mathematically innocuous change so that the last line becomes</p>
 
 <p>then the code no longer compiles with an error saying that <code>operator*</code> is not
 defined for the types of <code>a.transpose()</code> and <code>A.rowwise()</code>.  To
-reiterate the main point: <em>when broadcasting, the visitor must be on the left
-hand side of the operator being used</em>.  This is not the case with both Matlab
+reiterate the main point: <strong>when broadcasting, the visitor must be on the left
+hand side of the operator being used</strong>.  This is not the case with both Matlab
 or python where <code>repmat(a, 2, 1) .* A</code> and <code>a * A</code> will work as well.</p>
 <p>Hopefully, this is just an oversight and there is an easy fix, and not a
 shortcoming of the expression generation that Eigen performs.</p><script type= "text/javascript">
