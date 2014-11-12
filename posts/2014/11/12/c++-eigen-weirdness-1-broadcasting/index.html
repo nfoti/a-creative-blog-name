@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>(A Creative Blog Name Here) - virtualenv</title>
+  <title>Eigen Weirdness #1: Broadcasting</title>
   <meta name="author" content="Nick Foti">
 
 
@@ -50,7 +50,7 @@
     <li >
     <a href="http://nfoti.github.io/a-creative-blog-name/category/blog.html">Blog</a>
     </li>
-    <li >
+    <li class="active">
     <a href="http://nfoti.github.io/a-creative-blog-name/category/c.html">C++</a>
     </li>
     <li >
@@ -68,33 +68,87 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div class="blog-index">
-  		<article>
+<div>
+  <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">
-        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/">Setting up python in virtualenv for data analysis on OSX</a>
-      </h1>
-      <p class="meta"><time datetime="2012-07-17T14:35:00" pubdate>17 July 2012 02-35 PM</time></p>
+      <h1 class="entry-title">Eigen Weirdness #1: Broadcasting</h1>
+      <p class="meta"><time datetime="2014-11-12T09:44:00" pubdate>12 November 2014 09-44 AM</time></p>
 </header>
 
-  <div class="entry-content"><p>I have decided to use python for my research code as I have become fed up with
-needing an internet connection to work with Matlab and not being able to
-check out a license for toolboxes I need (e.g. the statistics toolbox) right
-before a paper deadline.  I have ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/">Read On &crarr;</a>
-  </footer>
-  		</article>
-<div class="pagination">
+  <div class="entry-content"><p>I have needed to implement some of my research code in C++ and I have been
+using the <a href="http://eigen.tuxfamily.org">Eigen</a> library for linear algebra.
+There are a lot of great things about Eigen, however, there are some hang-ups
+I have run into that do not seem to be documented anywhere.  As I run into
+these issues I am going to document how to deal with them.</p>
+<p>This post focuses on some peculiar broadcasting syntax, specifically, that the
+visitor <em>needs to appear on the left hand side of the operation that is
+broadcasting</em>.  This feature conflicts with math in that scalar multiplication
+is commutative ($x * y = y * x$) and so is actually hard to track down from the
+compiler error.</p>
+<p>As a concrete example, we consider a similar example that mimics the use-case
+I encountered in my research. 
+The full code can be found at this
+<a href="https://gist.github.com/9c14e3f591cd26500335.git">gist</a>(Note that the code in the gist uses
+<code>ArrayXXd</code> and <code>ArrayXd</code> rather than <code>MatrixXd</code> and <code>VectorXd</code>).</p>
+<p>Suppose we have a $N \times p$ matrix $A$ and $p$-vector $a$ where we want to
+pointwise multiply the rows of $A$ by $a$.  In Matlab this would be
+accomplished with the code: <code>A .* repmat(a, 2, 1)</code>, and in numpy we would write
+<code>A * a</code>.  The equivalent code in Eigen (with some setup code) looks like</p>
+<div class="highlight"><pre>    <span class="n">MatrixXd</span> <span class="nf">A</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">VectorXd</span> <span class="nf">a</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
 
-  <br />
-</div></div>
+    <span class="n">A</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span>
+         <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">;</span>
+
+    <span class="n">MatrixXd</span> <span class="nf">res</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">rowwise</span><span class="p">()</span> <span class="o">*</span> <span class="n">a</span><span class="p">.</span><span class="n">transpose</span><span class="p">();</span>
+</pre></div>
+
+
+<p>This code will compile fine and produce the correct output.  However, if we
+make a mathematically innocuous change so that the last line becomes</p>
+<div class="highlight"><pre>    <span class="n">res</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">transpose</span><span class="p">()</span> <span class="o">*</span> <span class="n">A</span><span class="p">.</span><span class="n">rowwise</span><span class="p">();</span>
+</pre></div>
+
+
+<p>the code no longer compiles with an error saying that <code>operator*</code> is not
+defined for the types returned by <code>a.transpose()</code> and <code>A.rowwise()</code>.  To
+reiterate the main point, <em>when broadcasting the visitor must be on the left
+hand side of the operator being used</em>.</p>
+<p>Hopefully, this is just an oversight and there is an easy fix, and not a
+shortcoming of the expression generation that Eigen performs.</p></div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Nick Foti</span>
+  </span>
+<time datetime="2014-11-12T09:44:00" pubdate>12 November 2014 09-44 AM</time>  <span class="categories">
+    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/eigen.html">eigen</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+</div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/">Setting up python in virtualenv for data analysis on OSX</a>
+          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/">Eigen Weirdness #1: Broadcasting</a>
+      </li>
+      <li class="post">
+          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2014/08/15/foti/">Migrating the Blog to Github Pages</a>
+      </li>
+      <li class="post">
+          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/">Calling Rmath from cython (sometimes R just does it better)</a>
+      </li>
+      <li class="post">
+          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/">Types as function arguments in Julia</a>
+      </li>
+      <li class="post">
+          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/">Cleaning Cython Build Files</a>
       </li>
     </ul>
   </section>
@@ -127,7 +181,7 @@ before a paper deadline.  I have ...</p></div>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2012  - Nick Foti -
+    Copyright &copy;  2012-2014  - Nick Foti -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
 </body>

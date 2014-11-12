@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/nick-foti.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2013-08-19T13:54:00-07:00</updated><entry><title>Calling Rmath from cython (sometimes R just does it better)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/" rel="alternate"></link><updated>2013-08-19T13:54:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-08-19:a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</id><summary type="html">&lt;p&gt;Recently I was writing some code that required the quantile function of the
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/nick-foti.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2014-11-12T09:44:00-08:00</updated><entry><title>Eigen Weirdness #1: Broadcasting</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/" rel="alternate"></link><updated>2014-11-12T09:44:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2014-11-12:a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/</id><summary type="html">&lt;p&gt;I have needed to implement some of my research code in C++ and I have been
+using the &lt;a href="http://eigen.tuxfamily.org"&gt;Eigen&lt;/a&gt; library for linear algebra.
+There are a lot of great things about Eigen, however, there are some hang-ups
+I have run into that do not seem to be documented anywhere.  As I run into
+these issues I am going to document how to deal with them.&lt;/p&gt;
+&lt;p&gt;This post focuses on some peculiar broadcasting syntax, specifically, that the
+visitor &lt;em&gt;needs to appear on the left hand side of the operation that is
+broadcasting&lt;/em&gt;.  This feature conflicts with math in that scalar multiplication
+is commutative ($x * y = y * x$) and so is actually hard to track down from the
+compiler error.&lt;/p&gt;
+&lt;p&gt;As a concrete example, we consider a similar example that mimics the use-case
+I encountered in my research. 
+The full code can be found at this
+&lt;a href="https://gist.github.com/9c14e3f591cd26500335.git"&gt;gist&lt;/a&gt;(Note that the code in the gist uses
+&lt;code&gt;ArrayXXd&lt;/code&gt; and &lt;code&gt;ArrayXd&lt;/code&gt; rather than &lt;code&gt;MatrixXd&lt;/code&gt; and &lt;code&gt;VectorXd&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Suppose we have a $N \times p$ matrix $A$ and $p$-vector $a$ where we want to
+pointwise multiply the rows of $A$ by $a$.  In Matlab this would be
+accomplished with the code: &lt;code&gt;A .* repmat(a, 2, 1)&lt;/code&gt;, and in numpy we would write
+&lt;code&gt;A * a&lt;/code&gt;.  The equivalent code in Eigen (with some setup code) looks like&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;MatrixXd&lt;/span&gt; &lt;span class="nf"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;VectorXd&lt;/span&gt; &lt;span class="nf"&gt;a&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+         &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;MatrixXd&lt;/span&gt; &lt;span class="nf"&gt;res&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rowwise&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transpose&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This code will compile fine and produce the correct output.  However, if we
+make a mathematically innocuous change so that the last line becomes&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transpose&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rowwise&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;the code no longer compiles with an error saying that &lt;code&gt;operator*&lt;/code&gt; is not
+defined for the types returned by &lt;code&gt;a.transpose()&lt;/code&gt; and &lt;code&gt;A.rowwise()&lt;/code&gt;.  To
+reiterate the main point, &lt;em&gt;when broadcasting the visitor must be on the left
+hand side of the operator being used&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Hopefully, this is just an oversight and there is an easy fix, and not a
+shortcoming of the expression generation that Eigen performs.&lt;/p&gt;</summary><category term="eigen"></category></entry><entry><title>Calling Rmath from cython (sometimes R just does it better)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/" rel="alternate"></link><updated>2013-08-19T13:54:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-08-19:a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</id><summary type="html">&lt;p&gt;Recently I was writing some code that required the quantile function of the
 chi-squared distribution.  There is a function in ccipy that implements this
 function, however, calling a python function from cython is slow.  The scipy
 implementation calls a function in the cephes library.  Unfortunately, scipy
