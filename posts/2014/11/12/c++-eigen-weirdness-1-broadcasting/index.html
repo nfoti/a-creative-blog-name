@@ -83,8 +83,8 @@ these issues I am going to document how to deal with them.</p>
 <p>This post focuses on some peculiar broadcasting syntax, specifically, that the
 visitor <em>needs to appear on the left hand side of the operation that is
 broadcasting</em>.  This feature conflicts with math in that scalar multiplication
-is commutative ($x * y = y * x$) and so is actually hard to track down from the
-compiler error.</p>
+is commutative, i.e. $x * y = y * x$ and so is actually hard to track down from
+the compiler error.</p>
 <p>As a concrete example, we consider a similar example that mimics the use-case
 I encountered in my research. 
 The full code can be found at this
