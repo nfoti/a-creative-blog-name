@@ -88,9 +88,11 @@ compiler error.</p>
 <p>As a concrete example, we consider a similar example that mimics the use-case
 I encountered in my research. 
 The full code can be found at this
-<a href="https://gist.github.com/9c14e3f591cd26500335.git">gist</a>(Note that the code in the gist uses
+<a href="script
+src=&quot;https://gist.github.com/nfoti/9c14e3f591cd26500335.js&quot;&gt;&lt;/script">gist</a> (Note that the code in the gist uses
 <code>ArrayXXd</code> and <code>ArrayXd</code> rather than <code>MatrixXd</code> and <code>VectorXd</code>).</p>
-<p>Suppose we have a $N \times p$ matrix $A$ and $p$-vector $a$ where we want to
+<p>Suppose we have a $N \times p$ matrix $A$ and $p$-vector $a$
+where we want to
 pointwise multiply the rows of $A$ by $a$.  In Matlab this would be
 accomplished with the code: <code>A .* repmat(a, 2, 1)</code>, and in numpy we would write
 <code>A * a</code>.  The equivalent code in Eigen (with some setup code) looks like</p>
@@ -103,6 +105,9 @@ accomplished with the code: <code>A .* repmat(a, 2, 1)</code>, and in numpy we w
 
     <span class="n">MatrixXd</span> <span class="nf">res</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">);</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">rowwise</span><span class="p">()</span> <span class="o">*</span> <span class="n">a</span><span class="p">.</span><span class="n">transpose</span><span class="p">();</span>
+
+    <span class="c1">// res = 0 2 12 27</span>
+    <span class="c1">//       0 1 14 6</span>
 </pre></div>
 
 
@@ -112,12 +117,42 @@ make a mathematically innocuous change so that the last line becomes</p>
 </pre></div>
 
 
-<p>the code no longer compiles with an error saying that <code>operator*</code> is not
-defined for the types returned by <code>a.transpose()</code> and <code>A.rowwise()</code>.  To
-reiterate the main point, <em>when broadcasting the visitor must be on the left
+<p>then the code no longer compiles with an error saying that <code>operator*</code> is not
+defined for the types of <code>a.transpose()</code> and <code>A.rowwise()</code>.  To
+reiterate the main point: <em>when broadcasting, the visitor must be on the left
 hand side of the operator being used</em>.</p>
 <p>Hopefully, this is just an oversight and there is an easy fix, and not a
-shortcoming of the expression generation that Eigen performs.</p></div>
+shortcoming of the expression generation that Eigen performs.</p><script type= "text/javascript">
+    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+        var mathjaxscript = document.createElement('script');
+        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+        mathjaxscript.type = 'text/javascript';
+        mathjaxscript.src = 'https:' == document.location.protocol
+                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+            "MathJax.Hub.Config({" +
+            "    config: ['MMLorHTML.js']," +
+            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+            "    displayAlign: 'center'," +
+            "    displayIndent: '0em'," +
+            "    showMathMenu: true," +
+            "    tex2jax: { " +
+            "        inlineMath: [ ['$','$'] ], " +
+            "        displayMath: [ ['$$','$$'] ]," +
+            "        processEscapes: true," +
+            "        preview: 'TeX'," +
+            "    }, " +
+            "    'HTML-CSS': { " +
+            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+            "    } " +
+            "}); ";
+        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+    }
+</script>
+</div>
     <footer>
 <p class="meta">
   <span class="byline author vcard">
