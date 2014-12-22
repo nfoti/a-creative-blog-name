@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/vim.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2012-07-22T13:21:00-07:00</updated><entry><title>Using syntastic with vim (and a vim bug on OSX)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/" rel="alternate"></link><updated>2012-07-22T13:21:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-22:a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/</id><summary type="html">&lt;p&gt;Syntastic is a syntax checking plugin for vim that supports many different
+languages.  I decided to give it a try in my current vim setup for my current
+projects written in python.  Additionally, I decided to try out 
+&lt;a href="http://pypi.python.org/pypi/flake8/"&gt;flake8&lt;/a&gt;, a wrapper for pyflakes, 
+pep8 and mccabe.&lt;/p&gt;
+&lt;p&gt;Setting up flake8 is simple, just execute&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install flake8
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To install syntastic follow the instructions on the github page 
+&lt;a href="https://github.com/scrooloose/syntastic"&gt;here&lt;/a&gt; (if you're not using pathogen,
+to manage your vim plugins you should).  In your vimrc file add these lines&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;let &lt;/span&gt;g:syntastic_check_on_open&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nb"&gt;let &lt;/span&gt;g:syntastic_python_checker&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;flake8&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;See the README file for instructions on how to use syntastic.&lt;/p&gt;
+&lt;h4&gt;Caveat&lt;/h4&gt;
+&lt;p&gt;There is a bug in vim that causes a segfault when you execute wq in vim and
+have a single python source file and the errors window open.  Supposedly this
+was fixed in vim 7.3.449, however, I am using vim 7.3.608 and the bug is still
+present.  Some simple workarounds are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;close the errors window before quitting vim&lt;/li&gt;
+&lt;li&gt;have multiple source files open &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The bug is still annoying though and will hopefully be fixed at some point.&lt;/p&gt;</summary><category term="vim"></category><category term="osx"></category><category term="syntastic"></category></entry></feed>

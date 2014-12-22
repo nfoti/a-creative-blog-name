@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/c.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2014-11-12T09:44:00-08:00</updated><entry><title>Eigen Weirdness #1: Broadcasting</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/" rel="alternate"></link><updated>2014-11-12T09:44:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2014-11-12:a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/</id><summary type="html">&lt;p&gt;I have needed to implement some of my research code in C++ and I have been
+using the &lt;a href="http://eigen.tuxfamily.org"&gt;Eigen&lt;/a&gt; library for linear algebra.
+There are a lot of great things about Eigen, however, there are some hang-ups
+I have run into that do not seem to be documented anywhere.  As I run into
+these issues I am going to document how to deal with them.&lt;/p&gt;
+&lt;p&gt;This post focuses on some peculiar broadcasting syntax, specifically, that the
+visitor &lt;strong&gt;needs to appear on the left hand side of the operation that is
+broadcasting&lt;/strong&gt;.  This feature conflicts with math in that scalar multiplication
+is commutative, i.e. $x * y = y * x$ and so is actually hard to track down from
+the compiler error.&lt;/p&gt;
+&lt;p&gt;As a concrete example, we consider a similar example that mimics the use-case
+I encountered in my research. 
+The full code can be found at this
+&lt;a href="script
+src=&amp;quot;https://gist.github.com/nfoti/9c14e3f591cd26500335.js&amp;quot;&amp;gt;&amp;lt;/script"&gt;gist&lt;/a&gt; (Note that the code in the gist uses
+&lt;code&gt;ArrayXXd&lt;/code&gt; and &lt;code&gt;ArrayXd&lt;/code&gt; rather than &lt;code&gt;MatrixXd&lt;/code&gt; and &lt;code&gt;VectorXd&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Suppose we have a $N \times p$ matrix $A$ and $p$-vector $a$
+where we want to
+pointwise multiply the rows of $A$ by $a$.  In Matlab this would be
+accomplished with the code: &lt;code&gt;A .* repmat(a, 2, 1)&lt;/code&gt;, and in numpy we would write
+&lt;code&gt;A * a&lt;/code&gt;.  The equivalent code in Eigen (with some setup code) looks like&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;MatrixXd&lt;/span&gt; &lt;span class="nf"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;VectorXd&lt;/span&gt; &lt;span class="nf"&gt;a&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+         &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;MatrixXd&lt;/span&gt; &lt;span class="nf"&gt;res&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rowwise&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transpose&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+    &lt;span class="c1"&gt;// res = 0 2 12 27&lt;/span&gt;
+    &lt;span class="c1"&gt;//       0 1 14 6&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This code will compile fine and produce the correct output.  However, if we
+make a mathematically innocuous change so that the last line becomes&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transpose&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rowwise&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;then the code no longer compiles with an error saying that &lt;code&gt;operator*&lt;/code&gt; is not
+defined for the types of &lt;code&gt;a.transpose()&lt;/code&gt; and &lt;code&gt;A.rowwise()&lt;/code&gt;.  To
+reiterate the main point: &lt;strong&gt;when broadcasting, the visitor must be on the left
+hand side of the operator being used&lt;/strong&gt;.  This is not the case with both Matlab
+or python where &lt;code&gt;repmat(a, 2, 1) .* A&lt;/code&gt; and &lt;code&gt;a * A&lt;/code&gt; will work as well.&lt;/p&gt;
+&lt;p&gt;Hopefully, this is just an oversight and there is an easy fix, and not a
+shortcoming of the expression generation that Eigen performs.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
+    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+        var mathjaxscript = document.createElement('script');
+        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+        mathjaxscript.type = 'text/javascript';
+        mathjaxscript.src = 'https:' == document.location.protocol
+                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+            "MathJax.Hub.Config({" +
+            "    config: ['MMLorHTML.js']," +
+            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+            "    displayAlign: 'center'," +
+            "    displayIndent: '0em'," +
+            "    showMathMenu: true," +
+            "    tex2jax: { " +
+            "        inlineMath: [ ['$','$'] ], " +
+            "        displayMath: [ ['$$','$$'] ]," +
+            "        processEscapes: true," +
+            "        preview: 'TeX'," +
+            "    }, " +
+            "    'HTML-CSS': { " +
+            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+            "    } " +
+            "}); ";
+        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+    }
+&lt;/script&gt;
+</summary><category term="eigen"></category></entry></feed>

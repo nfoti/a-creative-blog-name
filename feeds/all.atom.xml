@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/all.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2014-11-12T09:44:00-08:00</updated><entry><title>Eigen Weirdness #1: Broadcasting</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/" rel="alternate"></link><updated>2014-11-12T09:44:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2014-11-12:a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/</id><summary type="html">&lt;p&gt;I have needed to implement some of my research code in C++ and I have been
+using the &lt;a href="http://eigen.tuxfamily.org"&gt;Eigen&lt;/a&gt; library for linear algebra.
+There are a lot of great things about Eigen, however, there are some hang-ups
+I have run into that do not seem to be documented anywhere.  As I run into
+these issues I am going to document how to deal with them.&lt;/p&gt;
+&lt;p&gt;This post focuses on some peculiar broadcasting syntax, specifically, that the
+visitor &lt;strong&gt;needs to appear on the left hand side of the operation that is
+broadcasting&lt;/strong&gt;.  This feature conflicts with math in that scalar multiplication
+is commutative, i.e. $x * y = y * x$ and so is actually hard to track down from
+the compiler error.&lt;/p&gt;
+&lt;p&gt;As a concrete example, we consider a similar example that mimics the use-case
+I encountered in my research. 
+The full code can be found at this
+&lt;a href="script
+src=&amp;quot;https://gist.github.com/nfoti/9c14e3f591cd26500335.js&amp;quot;&amp;gt;&amp;lt;/script"&gt;gist&lt;/a&gt; (Note that the code in the gist uses
+&lt;code&gt;ArrayXXd&lt;/code&gt; and &lt;code&gt;ArrayXd&lt;/code&gt; rather than &lt;code&gt;MatrixXd&lt;/code&gt; and &lt;code&gt;VectorXd&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;Suppose we have a $N \times p$ matrix $A$ and $p$-vector $a$
+where we want to
+pointwise multiply the rows of $A$ by $a$.  In Matlab this would be
+accomplished with the code: &lt;code&gt;A .* repmat(a, 2, 1)&lt;/code&gt;, and in numpy we would write
+&lt;code&gt;A * a&lt;/code&gt;.  The equivalent code in Eigen (with some setup code) looks like&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;MatrixXd&lt;/span&gt; &lt;span class="nf"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;VectorXd&lt;/span&gt; &lt;span class="nf"&gt;a&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+         &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+    &lt;span class="n"&gt;MatrixXd&lt;/span&gt; &lt;span class="nf"&gt;res&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rowwise&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transpose&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+    &lt;span class="c1"&gt;// res = 0 2 12 27&lt;/span&gt;
+    &lt;span class="c1"&gt;//       0 1 14 6&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This code will compile fine and produce the correct output.  However, if we
+make a mathematically innocuous change so that the last line becomes&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    &lt;span class="n"&gt;res&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transpose&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rowwise&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;then the code no longer compiles with an error saying that &lt;code&gt;operator*&lt;/code&gt; is not
+defined for the types of &lt;code&gt;a.transpose()&lt;/code&gt; and &lt;code&gt;A.rowwise()&lt;/code&gt;.  To
+reiterate the main point: &lt;strong&gt;when broadcasting, the visitor must be on the left
+hand side of the operator being used&lt;/strong&gt;.  This is not the case with both Matlab
+or python where &lt;code&gt;repmat(a, 2, 1) .* A&lt;/code&gt; and &lt;code&gt;a * A&lt;/code&gt; will work as well.&lt;/p&gt;
+&lt;p&gt;Hopefully, this is just an oversight and there is an easy fix, and not a
+shortcoming of the expression generation that Eigen performs.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
+    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+        var mathjaxscript = document.createElement('script');
+        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+        mathjaxscript.type = 'text/javascript';
+        mathjaxscript.src = 'https:' == document.location.protocol
+                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+            "MathJax.Hub.Config({" +
+            "    config: ['MMLorHTML.js']," +
+            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+            "    displayAlign: 'center'," +
+            "    displayIndent: '0em'," +
+            "    showMathMenu: true," +
+            "    tex2jax: { " +
+            "        inlineMath: [ ['$','$'] ], " +
+            "        displayMath: [ ['$$','$$'] ]," +
+            "        processEscapes: true," +
+            "        preview: 'TeX'," +
+            "    }, " +
+            "    'HTML-CSS': { " +
+            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+            "    } " +
+            "}); ";
+        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+    }
+&lt;/script&gt;
+</summary><category term="eigen"></category></entry><entry><title>Migrating the Blog to Github Pages</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2014/08/15/foti/" rel="alternate"></link><updated>2014-08-15T20:43:00-07:00</updated><author><name>Nick</name></author><id>tag:nfoti.github.io,2014-08-15:a-creative-blog-name/posts/2014/08/15/foti/</id><summary type="html">&lt;p&gt;The account at my former institution was recently deleted.  Unfortunately, I
+was hosting this blog there and so I was forced to migrate it somewhere else.
+I have always wanted to host the blog on Github Pages (where my site is hosted)
+and this seemed like good enough excuse to finally do this.  I wanted to record
+the small hiccups I ran into.&lt;/p&gt;
+&lt;p&gt;Previously I could build the blog content with &lt;code&gt;make html&lt;/code&gt;, however, this did
+not work anymore on Github Pages.  Strangely, the command &lt;code&gt;pelican -s
+pelicanconf.py .&lt;/code&gt; does work, so I updated the &lt;code&gt;html&lt;/code&gt; rule in &lt;code&gt;Makefile&lt;/code&gt; to use
+the &lt;code&gt;pelican&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;In order for Github to render the blog the files in the &lt;code&gt;output/&lt;/code&gt; directory
+must be pushed to the &lt;code&gt;gh-pages&lt;/code&gt; branch (the blog source is on &lt;code&gt;master&lt;/code&gt;).  The
+Pelican documentation suggests using the &lt;code&gt;ghp-import&lt;/code&gt; script (install with &lt;code&gt;pip
+install ghp-import&lt;/code&gt;) in order to automatically set up the necessary branches.
+Then we can just push to the &lt;code&gt;gh-pages&lt;/code&gt; branch.&lt;/p&gt;
+&lt;p&gt;The full pipeline to generate the blog content is now (note &lt;code&gt;make html&lt;/code&gt; has
+been updated):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;make&lt;/span&gt; &lt;span class="n"&gt;html&lt;/span&gt;
+&lt;span class="n"&gt;ghp&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;import&lt;/span&gt; &lt;span class="n"&gt;output&lt;/span&gt;
+&lt;span class="n"&gt;git&lt;/span&gt; &lt;span class="n"&gt;push&lt;/span&gt; &lt;span class="n"&gt;origin&lt;/span&gt; &lt;span class="n"&gt;gh&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;pages&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;As the Pelican documentation suggests these steps can be added to a post-commit
+hook.&lt;/p&gt;</summary><category term="github-pages"></category><category term="Migrating"></category><category term="Blog"></category><category term="to"></category><category term="Github"></category><category term="Pages"></category></entry><entry><title>Calling Rmath from cython (sometimes R just does it better)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/" rel="alternate"></link><updated>2013-08-19T13:54:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-08-19:a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</id><summary type="html">&lt;p&gt;Recently I was writing some code that required the quantile function of the
+chi-squared distribution.  There is a function in ccipy that implements this
+function, however, calling a python function from cython is slow.  The scipy
+implementation calls a function in the cephes library.  Unfortunately, scipy
+compiles the cephes library code directly into the corresponding scipy
+functions, so I had to build my own version of cephes.  Once I had done this I
+went ahead and called the cephes function from some cython code only to be
+plagued with numerical errors.  This was strange because the R implementation
+of the chi-squared quantile function would yield non-zero results when the
+cephes function would return zero.&lt;/p&gt;
+&lt;p&gt;This experience led me to wrap the Rmath library with cython to make the
+functions available to cython code.  You need to build the Rmath library for
+standalone use first (having R on your system is not enough), but then you will
+be able to use nice R functions for your distributional needs.&lt;/p&gt;
+&lt;p&gt;See the &lt;a href="http://github.com/nfoti/cythonRMath"&gt;project page&lt;/a&gt; for more 
+information and examples.&lt;/p&gt;</summary><category term="cython"></category><category term="Rmath"></category></entry><entry><title>Types as function arguments in Julia</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/" rel="alternate"></link><updated>2013-06-27T12:25:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-06-27:a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/</id><summary type="html">&lt;p&gt;The multiple dispatch mechanism in Julia makes passing types as arguments to
+functions desirable.  This technique is sometimes referred to as "types as
+tags" and a contrived example is presented below.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;type&lt;/span&gt;&lt;span class="nc"&gt; A&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="k"&gt;type&lt;/span&gt;&lt;span class="nc"&gt; B&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+
+&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(::&lt;/span&gt;&lt;span class="n"&gt;Type&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;f with type A&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(::&lt;/span&gt;&lt;span class="n"&gt;Type&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;println&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;f with type B&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="types as tags"></category></entry><entry><title>Cleaning Cython Build Files</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/" rel="alternate"></link><updated>2013-02-07T16:32:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-02-07:a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/</id><summary type="html">&lt;p&gt;Whenever I use a setup.py script to build Cython code a variety of files are
+created including a &lt;code&gt;.so&lt;/code&gt; file, one or more &lt;code&gt;.c&lt;/code&gt; files and perhaps others.
+Until today I would delete these by hand as I did not have the patience to
+delve into what a setup.py file was actually doing and using the command
+&lt;code&gt;python setup.py clean&lt;/code&gt; never worked.&lt;/p&gt;
+&lt;p&gt;The code snippet below is my new skeleton setup.py file for Cython projects.The
+notable features are the creation of the &lt;code&gt;cleanall&lt;/code&gt; rule that deletes the files
+that Cython creates, enforcing that the &lt;code&gt;--inplace&lt;/code&gt; option is passed
+to the &lt;code&gt;build_ext&lt;/code&gt; rule and only building 64-bit targets (I have previously posted 
+on how to do this with environment variables in the shell).&lt;/p&gt;
+&lt;p&gt;These ideas are based off of the setup.py file that can be found in tand always 
+&lt;a href="https://groups.google.com/forum/?fromgroups=#!topic/cython-users/m22o0kq_EfM"&gt;this&lt;/a&gt;
+discussion.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;subprocess&lt;/span&gt;
+
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;distutils.core&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;setup&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;distutils.extension&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Extension&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;Cython.Distutils&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;build_ext&lt;/span&gt;
+
+
+&lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;:]&lt;/span&gt;
+
+&lt;span class="c"&gt;# Make a `cleanall` rule to get rid of intermediate and library files&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;cleanall&amp;quot;&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Deleting cython files...&amp;quot;&lt;/span&gt;
+    &lt;span class="c"&gt;# Just in case the build directory was created by accident,&lt;/span&gt;
+    &lt;span class="c"&gt;# note that shell=True should be OK here because the command is constant.&lt;/span&gt;
+    &lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Popen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;rm -rf build&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;executable&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Popen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;rm -rf *.c&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;executable&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;subprocess&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Popen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;rm -rf *.so&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;shell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="bp"&gt;True&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;executable&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;/bin/bash&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c"&gt;# Now do a normal clean&lt;/span&gt;
+    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;clean&amp;quot;&lt;/span&gt;
+
+&lt;span class="c"&gt;# We want to always use build_ext --inplace&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;build_ext&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt; &lt;span class="ow"&gt;and&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;--inplace&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;insert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;build_ext&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;--inplace&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c"&gt;# Only build for 64-bit target&lt;/span&gt;
+&lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;ARCHFLAGS&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;-arch x86_64&amp;quot;&lt;/span&gt;
+
+&lt;span class="c"&gt;# Set up extension and build&lt;/span&gt;
+&lt;span class="n"&gt;cy_ext&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Extension&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;cy_ext&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                   &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;cy_ext.pyx&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+                   &lt;span class="n"&gt;include_dirs&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_include&lt;/span&gt;&lt;span class="p"&gt;()],&lt;/span&gt;
+                   &lt;span class="c"&gt;#extra_compile_args=[&amp;quot;-g&amp;quot;],&lt;/span&gt;
+                   &lt;span class="c"&gt;#extra_link_args=[&amp;quot;-g&amp;quot;]&lt;/span&gt;
+                   &lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;setup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmdclass&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;build_ext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;build_ext&lt;/span&gt;&lt;span class="p"&gt;},&lt;/span&gt;
+      &lt;span class="n"&gt;ext_modules&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;cy_ext&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="cython"></category></entry><entry><title>Matplotlib 3D plots in IPython</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/" rel="alternate"></link><updated>2012-12-14T10:13:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-12-14:a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/</id><summary type="html">&lt;h3&gt;Summary:&lt;/h3&gt;
+&lt;p&gt;Assume that&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;has been executed.&lt;/p&gt;
+&lt;p&gt;When using &lt;code&gt;mplot3d&lt;/code&gt; in IPython you have to manually draw the axes 
+which can be done using the &lt;code&gt;plt.draw&lt;/code&gt; function (or &lt;code&gt;plt.plot([],[])&lt;/code&gt;).&lt;br /&gt;
+For some reason the axes are not automatically drawn as with 2d plots.&lt;/p&gt;
+&lt;h3&gt;The full story:&lt;/h3&gt;
+&lt;p&gt;IPython provides some nice functionality for interactive plotting.  For 
+instance, the code&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+
+&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;linspace&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pi&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sin&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;plot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;pops up a figure with the graph of the &lt;code&gt;sin&lt;/code&gt;
+function over the interval $[0,2\pi]$.&lt;/p&gt;
+&lt;p&gt;When using &lt;code&gt;mplot3d&lt;/code&gt; for 3d plots in IPython the constructed axes are
+not drawn by default.  For instance the code (taken from the &lt;code&gt;mplot3d&lt;/code&gt; 
+examples)&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;numpy&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;np&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;mpl_toolkits.mplot3d&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Axes3D&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;matplotlib.pyplot&lt;/span&gt; &lt;span class="kn"&gt;as&lt;/span&gt; &lt;span class="nn"&gt;plt&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;randrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vmin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;vmax&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;vmax&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;vmin&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;np&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;rand&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;vmin&lt;/span&gt;
+
+&lt;span class="n"&gt;fig&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;figure&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fig&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_subplot&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;111&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;projection&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;3d&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;zl&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;zh&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;r&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;o&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;50&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;25&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;b&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;^&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;30&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)]:&lt;/span&gt;
+    &lt;span class="n"&gt;xs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;randrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;23&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;ys&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;randrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;zs&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;randrange&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;zl&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;zh&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;scatter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;zs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;marker&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;m&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_xlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;X Label&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_ylabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Y Label&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;ax&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_zlabel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;Z Label&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;plt&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;show&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;results in a blank figure on the screen.  In order to see the results one
+must manually draw the axes which can be done with the &lt;code&gt;plt.draw&lt;/code&gt; function
+(or with &lt;code&gt;plt.plot([],[])&lt;/code&gt;).  I have no idea why this is the case, but 
+hopefully it will be fixed at some point.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
+    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+        var mathjaxscript = document.createElement('script');
+        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+        mathjaxscript.type = 'text/javascript';
+        mathjaxscript.src = 'https:' == document.location.protocol
+                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+            "MathJax.Hub.Config({" +
+            "    config: ['MMLorHTML.js']," +
+            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+            "    displayAlign: 'center'," +
+            "    displayIndent: '0em'," +
+            "    showMathMenu: true," +
+            "    tex2jax: { " +
+            "        inlineMath: [ ['$','$'] ], " +
+            "        displayMath: [ ['$$','$$'] ]," +
+            "        processEscapes: true," +
+            "        preview: 'TeX'," +
+            "    }, " +
+            "    'HTML-CSS': { " +
+            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+            "    } " +
+            "}); ";
+        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+    }
+&lt;/script&gt;
+</summary><category term="matplotlib"></category><category term="ipython"></category></entry><entry><title>Embedded gist appearance</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/" rel="alternate"></link><updated>2012-12-13T18:19:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-12-13:a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;Some of the posts on this blog include embedded gists to display code.
+Apparently GitHub has changed something about gists and now the syntax
+highlighting is all messed up.  Hopefully there will be a fix in the 
+near future, but in the mean time we're just going to have
+to live with the code looking awful.  As a quick fix I will not embed
+gists in posts until this issue has been fixed.&lt;/p&gt;
+&lt;p&gt;There is an issue at the octopress repostiory on GitHub
+&lt;a href="https://github.com/imathis/octopress/issues/847"&gt;here&lt;/a&gt; that you can follow
+to be updated on any progress.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Update:&lt;/em&gt; This blog doesn't use octopress anymore, so this may or may not 
+be a problem anymore.&lt;/p&gt;</summary></entry><entry><title>Building octopress blog with rake</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/" rel="alternate"></link><updated>2012-10-31T18:39:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-10-31:a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/</id><summary type="html">&lt;p&gt;If you experience the symptoms in octopress issue
+&lt;a href="https://github.com/imathis/octopress/issues/759"&gt;#759&lt;/a&gt;, i.e. &lt;code&gt;rake
+generate&lt;/code&gt; breaks because &lt;code&gt;ffi&lt;/code&gt; tries to load &lt;code&gt;lib.dylib&lt;/code&gt;, you 
+should check that the shell you are trying to build your blog from &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;is not running a tmux session (the wrong ruby will be used)&lt;/li&gt;
+&lt;li&gt;does not have a python virtualenv active (the wrong python will be used)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This worked for me on OSX at least.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Extracting keys from Python dict into interpreter namespace</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/" rel="alternate"></link><updated>2012-10-31T10:36:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-10-31:a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/</id><summary type="html">&lt;p&gt;I run a lot of experiments in ipython, the results of which I pickle and save
+to disk.  When I reload the results with pickle I end up with a dict whose keys
+are the variable names that I saved.  It is tedious to have to reference these
+values through the dict, what I would really like is behavior like &lt;code&gt;load&lt;/code&gt;
+in Matlab such that when I load the pickle file the variables are available in
+the global namespace.&lt;/p&gt;
+&lt;p&gt;I figured this was possible in Python but had no idea how to do this until 
+I found
+&lt;a href="http://stackoverflow.com/questions/4357851/creating-or-assigning-variables-from-a-dictionary-in-python"&gt;this&lt;/a&gt; 
+question on stack overflow that answers the question.&lt;/p&gt;
+&lt;p&gt;``` python Load pickle file variables into global namespace
+    try:
+        import cPickle as pickle
+    except ImportError:
+        import pickle&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;def&lt;/span&gt; &lt;span class="n"&gt;loadvars&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;namespace&lt;/span&gt; &lt;span class="n"&gt;is&lt;/span&gt; &lt;span class="n"&gt;None&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;namespace&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;globals&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;with&lt;/span&gt; &lt;span class="n"&gt;open&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="sc"&gt;&amp;#39;r&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="n"&gt;as&lt;/span&gt; &lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pickle&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;load&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;namespace&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;```&lt;/p&gt;
+&lt;p&gt;If you try to put this code in a module and import the function then you will
+have to pass &lt;code&gt;globals()&lt;/code&gt; to the function explicitly as the &lt;code&gt;globals()&lt;/code&gt;
+in the function is not the IPython global namespace.  However, you can put the
+above code inside your ~/.ipython/profile_PROFILE/startup/startup.ipy file and
+it will work as expected.  PROFILE is the name of the profile that you plan to
+start IPython with.&lt;/p&gt;</summary><category term="ipython"></category></entry><entry><title>Cython and GSL made easy</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/08/14/cython-and-gsl-made-easy/" rel="alternate"></link><updated>2012-08-14T16:56:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-08-14:a-creative-blog-name/posts/2012/08/14/cython-and-gsl-made-easy/</id><summary type="html">&lt;p&gt;I just found &lt;a href="https://github.com/twiecki/CythonGSL"&gt;CythonGSL&lt;/a&gt; on Github that
+wraps the GSL library for use with Cython.  Installation is simple&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/twiecki/CythonGSL.git 
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;CythonGSL
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py build
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;I have also added this to my behemoth 
+&lt;a href="/blog/2012/07/17/setting-up-virtualenv-for-data-analysis-on-osx/"&gt;instructions&lt;/a&gt;
+on setting up python.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
+    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+        var mathjaxscript = document.createElement('script');
+        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+        mathjaxscript.type = 'text/javascript';
+        mathjaxscript.src = 'https:' == document.location.protocol
+                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+            "MathJax.Hub.Config({" +
+            "    config: ['MMLorHTML.js']," +
+            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+            "    displayAlign: 'center'," +
+            "    displayIndent: '0em'," +
+            "    showMathMenu: true," +
+            "    tex2jax: { " +
+            "        inlineMath: [ ['$','$'] ], " +
+            "        displayMath: [ ['$$','$$'] ]," +
+            "        processEscapes: true," +
+            "        preview: 'TeX'," +
+            "    }, " +
+            "    'HTML-CSS': { " +
+            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+            "    } " +
+            "}); ";
+        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+    }
+&lt;/script&gt;
+</summary><category term="cython"></category><category term="gsl"></category></entry><entry><title>Python build targets</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/25/python-build-targets/" rel="alternate"></link><updated>2012-07-25T09:30:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-25:a-creative-blog-name/posts/2012/07/25/python-build-targets/</id><summary type="html">&lt;p&gt;While writing the code for my
+&lt;a href="/blog/2012/07/24/cythonizing-instance-methods/"&gt;last&lt;/a&gt; 
+post on Cython I encountered something strange regarding distutils.  The code
+linked to the GSL library which on my machine (running OSX) is a unversal
+library containing both 32- and 64-bit versions.  When I run&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py build_ext --inplace
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;distutils attempts to build 32- and 64-bit versions of the python
+extensions.  Since I'm using a 64-bit version of Python I get a link error 
+due to using the wrong architecture when the 32-bit version is built.&lt;/p&gt;
+&lt;p&gt;The simplest workaround I have found is as follows&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;export &lt;/span&gt;&lt;span class="nv"&gt;ARCHFLAGS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;-arch x86_64&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py build_ext --inplace
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This causes only the 64-bit version of the extension to be built.
+I'm sure there is a way to make distutils only build 64-bit versions by
+default, but I haven't found it yet.  When I do I will update the post.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
+    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+        var mathjaxscript = document.createElement('script');
+        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+        mathjaxscript.type = 'text/javascript';
+        mathjaxscript.src = 'https:' == document.location.protocol
+                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+            "MathJax.Hub.Config({" +
+            "    config: ['MMLorHTML.js']," +
+            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+            "    displayAlign: 'center'," +
+            "    displayIndent: '0em'," +
+            "    showMathMenu: true," +
+            "    tex2jax: { " +
+            "        inlineMath: [ ['$','$'] ], " +
+            "        displayMath: [ ['$$','$$'] ]," +
+            "        processEscapes: true," +
+            "        preview: 'TeX'," +
+            "    }, " +
+            "    'HTML-CSS': { " +
+            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+            "    } " +
+            "}); ";
+        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+    }
+&lt;/script&gt;
+</summary><category term=""></category></entry><entry><title>Cythonizing instance methods</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/" rel="alternate"></link><updated>2012-07-24T20:45:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-24:a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/</id><summary type="html">&lt;p&gt;A large amount of my work involves writing MCMC samplers.  The models I work
+with have a lot of parameters and the samplers require a lot of state to be
+recorded.  Normally, I stuff all of the parameters and state into a Python
+class and implement the different steps of the sampler as instance methods.
+One advantage of this approach is that the methods that perform the sampling
+don't require many arguments.
+Some of these methods run slowly due to for-loops that cannot be vectorized.
+&lt;a href="http://www.cython.org"&gt;Cython&lt;/a&gt; seems like a viable way to improve 
+performance of these methods.&lt;/p&gt;
+&lt;p&gt;The simplest way to implement the sampling functions with Cython would be to 
+define stand-alone functions in a .pyx file and pass all required data to 
+the functions (the functions could then be added to the class if desired).
+This defeats the purpose of using a class to store the state of the sampler 
+though as we would need to deal with unwieldly function prototypes.  It would
+be better to implement the instance method in a .pyx file (i.e. the first
+argument to the function is a sampler object) and then add the instance 
+method to the class.&lt;/p&gt;
+&lt;p&gt;In this post I describe how to do this for a contrived class
+and record some helpful references for working with Cython.
+This is nothing new, it is described on the 
+&lt;a href="http://wiki.cython.org/FAQ/#HowdoIimplementasingleclassmethodinaCythonmodule.3F"&gt;Cython Wiki&lt;/a&gt;
+as well as
+&lt;a href="http://bfroehle.com/2012/01/instance-methods-and-cython-functions/#more-121"&gt;here&lt;/a&gt;
+.  I have adapted my example from these sources.  Additionally, I provide an
+example of calling a function from the Gnu Scientific Library (&lt;a href="http://www.gnu.org/software/gsl/"&gt;GSL&lt;/a&gt;)
+from Cython code.&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;p 3173622="3173622" _="%" basic.py="basic.py" gist="gist"&gt;Let's define a (not very creative) simple class as in the following code&lt;/p&gt;
+&lt;p 3173622="3173622" _="%" cy1fun.pyx="cy1fun.pyx" gist="gist"&gt;Suppose that (after profiling) we have determined that the (also uncreative) 
+instance method &lt;code&gt;fun&lt;/code&gt; is very inefficient and that we want to implement it 
+with cython.  A first attempt at this is &lt;/p&gt;
+&lt;p&gt;To incorporate the Cython implementation of &lt;code&gt;fun&lt;/code&gt; into &lt;code&gt;MyClass&lt;/code&gt; we would like
+to be able to do&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;MyClass&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fun&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;cy1fun&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;fun&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p 3173622="3173622" _="%" cy1.py="cy1.py" gist="gist"&gt;&lt;strong&gt;This does not work as all Cython functions are unbound&lt;/strong&gt; (see 
+&lt;a href="http://wiki.cython.org/FAQ/#HowdoIimplementasingleclassmethodinaCythonmodule.3F"&gt;this&lt;/a&gt;).
+The solution is to use the &lt;code&gt;MethodType&lt;/code&gt; method of the &lt;code&gt;types&lt;/code&gt; module shown 
+here&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://gist.github.com/3173622"&gt;This gist&lt;/a&gt; contains all of the code that is
+used in this post.  The &lt;code&gt;setup.py&lt;/code&gt; file that was used to build the code can be 
+found there as well.  This is all we have to do to implement instance methods 
+in Cython.&lt;/p&gt;
+&lt;p 3173622="3173622" _="%" cy2.py="cy2.py" gist="gist"&gt;One dissatisfactory aspect of &lt;code&gt;cy1fun.pyx&lt;/code&gt; is that we are just calling the 
+Python function &lt;code&gt;scipy.special.gammaln&lt;/code&gt;.  In &lt;code&gt;cy2fun.pyx&lt;/code&gt; shown below I 
+instead call the &lt;a href="http://www.gnu.org/software/gsl/manual/html_node/Gamma-Functions.html"&gt;GSL function&lt;/a&gt; 
+that computes the natural logarithm of the gamma function (based off of
+&lt;a href="http://dpinte.wordpress.com/2010/04/22/interfacing-gsl-with-python-using-cython-comparison-with-weave/"&gt;this&lt;/a&gt;).
+I could have done the same with &lt;code&gt;np.random.rand&lt;/code&gt; and used a GSL random number 
+function, but I think the point has been made (see
+&lt;a href="https://gist.github.com/757090"&gt;this&lt;/a&gt; for how to use GSL random numbers in
+Cython code). 
+{% gist 3173622 cy2fun.pyx %}
+and the corresponding Python code&lt;/p&gt;</summary><category term="cython"></category><category term="instance methods"></category></entry><entry><title>Using syntastic with vim (and a vim bug on OSX)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/" rel="alternate"></link><updated>2012-07-22T13:21:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-22:a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/</id><summary type="html">&lt;p&gt;Syntastic is a syntax checking plugin for vim that supports many different
+languages.  I decided to give it a try in my current vim setup for my current
+projects written in python.  Additionally, I decided to try out 
+&lt;a href="http://pypi.python.org/pypi/flake8/"&gt;flake8&lt;/a&gt;, a wrapper for pyflakes, 
+pep8 and mccabe.&lt;/p&gt;
+&lt;p&gt;Setting up flake8 is simple, just execute&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install flake8
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;To install syntastic follow the instructions on the github page 
+&lt;a href="https://github.com/scrooloose/syntastic"&gt;here&lt;/a&gt; (if you're not using pathogen,
+to manage your vim plugins you should).  In your vimrc file add these lines&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;let &lt;/span&gt;g:syntastic_check_on_open&lt;span class="o"&gt;=&lt;/span&gt;1
+&lt;span class="nb"&gt;let &lt;/span&gt;g:syntastic_python_checker&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;flake8&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;See the README file for instructions on how to use syntastic.&lt;/p&gt;
+&lt;h4&gt;Caveat&lt;/h4&gt;
+&lt;p&gt;There is a bug in vim that causes a segfault when you execute wq in vim and
+have a single python source file and the errors window open.  Supposedly this
+was fixed in vim 7.3.449, however, I am using vim 7.3.608 and the bug is still
+present.  Some simple workarounds are:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;close the errors window before quitting vim&lt;/li&gt;
+&lt;li&gt;have multiple source files open &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The bug is still annoying though and will hopefully be fixed at some point.&lt;/p&gt;</summary><category term="vim"></category><category term="osx"></category><category term="syntastic"></category></entry><entry><title>IPython parallel</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/19/ipython-parallel/" rel="alternate"></link><updated>2012-07-19T14:01:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-19:a-creative-blog-name/posts/2012/07/19/ipython-parallel/</id><summary type="html">&lt;p&gt;When I start IPython the first two commands I run are&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;load_ext&lt;/span&gt; &lt;span class="n"&gt;autoreload&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;autoreload&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;which forces IPython to reload code before running it so that the newest
+version is always used.
+However, when developing code to run in parallel with the IPython.parallel 
+module on a cluster started with ipcluster the code will invariably break.
+The engines will continue using the old version until they are
+explicitly reloaded using &lt;code&gt;%px reload(broken_module)&lt;/code&gt;.&lt;br /&gt;
+Alternatively, we could use the autoreload extension&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;px&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;load_ext&lt;/span&gt; &lt;span class="n"&gt;autoreload&lt;/span&gt;
+&lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;px&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt;&lt;span class="n"&gt;autoreload&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;This will cause the engines to reload code before it tries to execute it.
+All of this assumes that the engines are using the same filesystem as the
+user's IPython session.&lt;/p&gt;</summary><category term="ipython"></category></entry><entry><title>Setting up python in virtualenv for data analysis on OSX</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/" rel="alternate"></link><updated>2012-07-17T14:35:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-17:a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/</id><summary type="html">&lt;p&gt;I have decided to use python for my research code as I have become fed up with
+needing an internet connection to work with Matlab and not being able to
+check out a license for toolboxes I need (e.g. the statistics toolbox) right
+before a paper deadline.  I have
+used python for while for munging raw data for input to Matlab, but have just
+recently felt that I could work with python as effectively as I could with
+Matlab.&lt;/p&gt;
+&lt;p&gt;I wanted my Python installation to use the newest versions of the various
+modules used for data analysis (e.g. numpy,
+scipy, ipython, matplotlib, etc.).  Since I already had the source for many of
+these projects I decided to build the current master branches (after a git pull
+to get the latest sources) with all of the bells and whistles like the ipython
+qt console and notebook.  Additionally, I wanted to put everything in a
+virtualenv to isolate it from my system Python in case I broke anything.  In
+the process I ran into a few problems and eventually figured out how to get a
+working system, in this post I want to document the process in case I need to
+reinstall any of it in the future.&lt;/p&gt;
+&lt;!-- more --&gt;
+
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Not everything is built from source, the main modules I work with
+are, but some dependencies are installed with pip.  Additionally, I assume
+that you will be using python 2.7 and that the directory where you store source
+code is SRC, the directory with virtualenvs is VENV and the name of the
+virtualenv is myvenv (you should name yours something meaningful though).
+Also, it is assumed that all &lt;code&gt;git clone ...&lt;/code&gt; commands should be run
+in the SRC directory.&lt;/p&gt;
+&lt;h4&gt;Install virtualenv and virtualenv wrapper.&lt;/h4&gt;
+&lt;p&gt;There are a number of introductions on this.  The one
+&lt;a href="http://www.thisisthegreenroom.com/2011/installing-python-numpy-scipy-matplotlib-and-ipython-on-lion/"&gt;here&lt;/a&gt;
+is good.&lt;/p&gt;
+&lt;h4&gt;Create a virtualenv&lt;/h4&gt;
+&lt;p&gt;virtualenvwrapper makes this really easy, see the documentation for 
+instructions.  Name it whatever you'd like.  As long as it is active 
+any modules you install (via pip or setup.py install) will be installed 
+for that python.&lt;/p&gt;
+&lt;h4&gt;IMPORTANT: Fix the python executable&lt;/h4&gt;
+&lt;p&gt;virtualenv only copies the python executable, however, for the application
+manager in OSX to recognize running python processes then, python must be 
+called from an application bundle (also see pythonw in the python framework).&lt;br /&gt;
+This step is necessary so that figures opened with matplotlib can be brought 
+to the front via cmd-tab (or clicking the icon in the dock).  If this step 
+is not performed then matplotlib figures open behind all other windows and 
+the only way to find them is to move all open windows.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/gldnspud/virtualenv-pythonw-osx.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;python install_pythonw.py &lt;span class="sb"&gt;`&lt;/span&gt;which python&lt;span class="sb"&gt;`&lt;/span&gt;/../..
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;numpy&lt;/h4&gt;
+&lt;p _="%" endcodeblock="endcodeblock"&gt;{% codeblock lang:bash %}
+$ cd your/src/directory
+$ git clone git://github.com/numpy/numpy.git  # or git pull
+$ cd numpy
+$ python setup.py build
+$ python setup.py install&lt;/p&gt;
+&lt;h4&gt;nose&lt;/h4&gt;
+&lt;p _="%" endcodeblock="endcodeblock"&gt;{% codeblock lang:bash %}
+$ pip install nose&lt;/p&gt;
+&lt;h4&gt;Test numpy&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    python -c &lt;span class="s1"&gt;&amp;#39;import numpy; numpy.test()&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;scipy&lt;/h4&gt;
+&lt;p _="%" endcodeblock="endcodeblock"&gt;{% codeblock lang:bash %}
+$ cd your/src/directory
+$ git clone git://github.com/scipy/scipy.git  # or git pull
+$ cd scipy 
+$ python setup.py build
+$ python setup.py install
+$ python -c 'import scipy; scipy.test()'&lt;/p&gt;
+&lt;h4&gt;readline&lt;/h4&gt;
+&lt;p&gt;{% codeblock lang:bash %}
+$ easy_install readline
+{% endcodeblock %}
+We use easy_install because readline won't be picked up if we install it
+with pip.&lt;/p&gt;
+&lt;h4&gt;Install other dependencies&lt;/h4&gt;
+&lt;p _="%" _endcodeblock="%endcodeblock"&gt;{% codeblock lang:bash %}
+$ pip install python-dateutil sphinx pygments tornado&lt;/p&gt;
+&lt;h4&gt;Install the ZMQ library&lt;/h4&gt;
+&lt;p&gt;Describing how is beyond the scope of this post,
+but there is a lot of information available elsewhere.  &lt;/p&gt;
+&lt;h4&gt;pyzmq&lt;/h4&gt;
+&lt;p _="%" endcodeblock_="endcodeblock%"&gt;{% codeblock lang:bash %}
+$ pip install pyzmq&lt;/p&gt;
+&lt;h4&gt;Install PySide system-wide&lt;/h4&gt;
+&lt;p&gt;There is a dmg to do this, instructions for which can be found online.&lt;br /&gt;
+Then create a symbolic link in this virtualenv to the system installation&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    ln -s path-to-sys-PySide VENV/myvenv/lib/python2.7/site-packages/PySide
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;ipython&lt;/h4&gt;
+&lt;p&gt;By default the build script will use the system installation of python.&lt;br /&gt;
+Instead, use the following so that the correct version of python is used.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;    python setup.py build --executable &lt;span class="s2"&gt;&amp;quot;VENV/myvenv/bin/python&amp;quot;&lt;/span&gt; 
+    python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;See &lt;a href="https://github.com/ipython/ipython/issues/1171"&gt;this&lt;/a&gt; discussion for more
+information.  Alternatively &lt;code&gt;`which python`&lt;/code&gt; can be 
+used to specify the executable.&lt;/p&gt;
+&lt;p&gt;Also, install mathjax if you'd like for the notebook.  In an IPython session
+run&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;IPython.external.mathjax&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;install_mathjax&lt;/span&gt;
+&lt;span class="n"&gt;install_mathjax&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You should now have a working ipython with qtconsole and notebook
+functionality (though you can't plot yet until we've installed matplotlib).&lt;/p&gt;
+&lt;h4&gt;matplotlib&lt;/h4&gt;
+&lt;p&gt;Building matplotlib on OSX is a pain.  Installing using pip might be best&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install -e https://github.com/matplotlib/matplotlib.git#egg&lt;span class="o"&gt;=&lt;/span&gt;Package
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;However, if you really want to build matplotlib from source then&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/matplotlib/matplotlib.git
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and follow the instructions in README.osx and make.osx&lt;/p&gt;
+&lt;h4&gt;cython&lt;/h4&gt;
+&lt;p&gt;I chose to build the latest stable version of cython rather than the master
+branch since so many other modules use it.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/cython/cython.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;make &lt;span class="nb"&gt;local&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;span class="nv"&gt;$ &lt;/span&gt;python runtests.py -vv
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Just a heads up that the tests take a &lt;em&gt;very&lt;/em&gt; long time to run.&lt;/p&gt;
+&lt;h4&gt;scikit-learn&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/scikit-learn/scikit-learn.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;make all
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; If building scikit-learn from source it is better to not install it
+system-wide with the last line about, but rather add the directory to the
+repository to your PYTHONPATH after the &lt;code&gt;make all&lt;/code&gt;.&lt;/p&gt;
+&lt;h4&gt;pandas&lt;/h4&gt;
+&lt;p&gt;First install the dependencies.&lt;/p&gt;
+&lt;h5&gt;numexpr&lt;/h5&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/erdc-cm/numexpr.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py build
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;span class="nv"&gt;$ &lt;/span&gt;python -c &lt;span class="s2"&gt;&amp;quot;import numexpr; numexpr.test()&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h5&gt;PyTables&lt;/h5&gt;
+&lt;p&gt;Make sure that you have the HDF5 libraries installed on your system and
+that they are on PATH.  Then, clone the repository from github and follow the
+instructions reproduced below&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/PyTables/PyTables.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py build_ext --inplace
+&lt;span class="nv"&gt;$ &lt;/span&gt;python -c &lt;span class="s1"&gt;&amp;#39;import tables; tables.test()&amp;#39;&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;h5py&lt;/h4&gt;
+&lt;p&gt;I've also found it useful to have h5py built as well for easily loading 
+version 7.3 mat files.  Do this as follows&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/qsnake/h5py.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;h5py
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py build --hdf5&lt;span class="o"&gt;=&lt;/span&gt;/usr/local
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You should replace &lt;code&gt;usr/local&lt;/code&gt; above with the path that contains
+the &lt;code&gt;include&lt;/code&gt;, &lt;code&gt;lib&lt;/code&gt;, etc. directories of your HDF5
+installation.&lt;/p&gt;
+&lt;h5&gt;rpy2&lt;/h5&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install rpy2
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Now, we can build and install pandas.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/pydata/pandas.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py build_ext --inplace
+&lt;span class="nv"&gt;$ &lt;/span&gt;nosetests pandas
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;&lt;strong&gt;Update:&lt;/strong&gt; Again, rather than installing you can just build in place and add
+the path to the pandas repository to your PYTHONPATH.  This way every time you
+pull a new version and build it you will see the effects immediately.&lt;/p&gt;
+&lt;h4&gt;statsmodels&lt;/h4&gt;
+&lt;p&gt;First we install the patsy module which statsmodels uses for formulas&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/pydata/patsy.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Then, statsmodels itself&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/statsmodels/statsmodels.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;PyMC&lt;/h4&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/pymc-devs/pymc.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py config_fc --fcompiler gnu95 build
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;span class="nv"&gt;$ &lt;/span&gt;python -c &lt;span class="s1"&gt;&amp;#39;import pymc; pymc.test()&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;bottleneck&lt;/h4&gt;
+&lt;p&gt;This modulde contains cythonized versions of certain numpy functions to speed
+them up including nansum, etc.  By now the drill is standard.
+Beware, this takes a very long time to build on my laptop.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/kwgoodman/bottleneck.git
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;span class="nv"&gt;$ &lt;/span&gt;python -c &lt;span class="s1"&gt;&amp;#39;import bottleneck; bottleneck.test()&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;CythonGSL&lt;/h4&gt;
+&lt;p&gt;This wraps the GSL library for use with Cython.  This is handy if you need
+things like the gamma function, or you can use it to generate random numbers
+(just be careful if you're also using np.random also) .&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone git://github.com/twiecki/CythonGSL.git 
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;CythonGSL
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py build
+&lt;span class="nv"&gt;$ &lt;/span&gt;python setup.py install
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h4&gt;Finished&lt;/h4&gt;
+&lt;p&gt;Ok, that's it, we have a pretty complete system for data analysis and research.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
+    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+        var mathjaxscript = document.createElement('script');
+        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+        mathjaxscript.type = 'text/javascript';
+        mathjaxscript.src = 'https:' == document.location.protocol
+                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
+                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+            "MathJax.Hub.Config({" +
+            "    config: ['MMLorHTML.js']," +
+            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+            "    displayAlign: 'center'," +
+            "    displayIndent: '0em'," +
+            "    showMathMenu: true," +
+            "    tex2jax: { " +
+            "        inlineMath: [ ['$','$'] ], " +
+            "        displayMath: [ ['$$','$$'] ]," +
+            "        processEscapes: true," +
+            "        preview: 'TeX'," +
+            "    }, " +
+            "    'HTML-CSS': { " +
+            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+            "    } " +
+            "}); ";
+        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+    }
+&lt;/script&gt;
+</summary><category term="virtualenv"></category><category term="osx"></category></entry></feed>

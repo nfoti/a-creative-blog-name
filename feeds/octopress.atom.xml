@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/octopress.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2012-12-13T18:19:00-08:00</updated><entry><title>Embedded gist appearance</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/" rel="alternate"></link><updated>2012-12-13T18:19:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-12-13:a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/</id><summary type="html">&lt;hr /&gt;
+&lt;p&gt;Some of the posts on this blog include embedded gists to display code.
+Apparently GitHub has changed something about gists and now the syntax
+highlighting is all messed up.  Hopefully there will be a fix in the 
+near future, but in the mean time we're just going to have
+to live with the code looking awful.  As a quick fix I will not embed
+gists in posts until this issue has been fixed.&lt;/p&gt;
+&lt;p&gt;There is an issue at the octopress repostiory on GitHub
+&lt;a href="https://github.com/imathis/octopress/issues/847"&gt;here&lt;/a&gt; that you can follow
+to be updated on any progress.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Update:&lt;/em&gt; This blog doesn't use octopress anymore, so this may or may not 
+be a problem anymore.&lt;/p&gt;</summary></entry><entry><title>Building octopress blog with rake</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/" rel="alternate"></link><updated>2012-10-31T18:39:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-10-31:a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/</id><summary type="html">&lt;p&gt;If you experience the symptoms in octopress issue
+&lt;a href="https://github.com/imathis/octopress/issues/759"&gt;#759&lt;/a&gt;, i.e. &lt;code&gt;rake
+generate&lt;/code&gt; breaks because &lt;code&gt;ffi&lt;/code&gt; tries to load &lt;code&gt;lib.dylib&lt;/code&gt;, you 
+should check that the shell you are trying to build your blog from &lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;is not running a tmux session (the wrong ruby will be used)&lt;/li&gt;
+&lt;li&gt;does not have a python virtualenv active (the wrong python will be used)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This worked for me on OSX at least.&lt;/p&gt;</summary><category term=""></category></entry></feed>
