@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Cleaning Cython Build Files</title>
+  <title>Debugging Python Extensions With Valgrind</title>
   <meta name="author" content="Nick Foti">
 
   <link href="http://nfoti.github.io/a-creative-blog-name/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
@@ -77,73 +77,20 @@
 <div>
   <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">Cleaning Cython Build Files</h1>
-      <p class="meta"><time datetime="2013-02-07T16:32:00-08:00" pubdate>07 February 2013 04-32 PM</time></p>
+      <h1 class="entry-title">Debugging Python Extensions With Valgrind</h1>
+      <p class="meta"><time datetime="2015-01-06T20:17:00-08:00" pubdate>06 January 2015 08-17 PM</time></p>
 </header>
 
-  <div class="entry-content"><p>Whenever I use a setup.py script to build Cython code a variety of files are
-created including a <code>.so</code> file, one or more <code>.c</code> files and perhaps others.
-Until today I would delete these by hand as I did not have the patience to
-delve into what a setup.py file was actually doing and using the command
-<code>python setup.py clean</code> never worked.</p>
-<p>The code snippet below is my new skeleton setup.py file for Cython projects.The
-notable features are the creation of the <code>cleanall</code> rule that deletes the files
-that Cython creates, enforcing that the <code>--inplace</code> option is passed
-to the <code>build_ext</code> rule and only building 64-bit targets (I have previously posted 
-on how to do this with environment variables in the shell).</p>
-<p>These ideas are based off of the setup.py file that can be found in tand always 
-<a href="https://groups.google.com/forum/?fromgroups=#!topic/cython-users/m22o0kq_EfM">this</a>
-discussion.</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">subprocess</span>
-
-<span class="kn">from</span> <span class="nn">distutils.core</span> <span class="kn">import</span> <span class="n">setup</span>
-<span class="kn">from</span> <span class="nn">distutils.extension</span> <span class="kn">import</span> <span class="n">Extension</span>
-<span class="kn">from</span> <span class="nn">Cython.Distutils</span> <span class="kn">import</span> <span class="n">build_ext</span>
-
-
-<span class="n">args</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-
-<span class="c"># Make a `cleanall` rule to get rid of intermediate and library files</span>
-<span class="k">if</span> <span class="s">&quot;cleanall&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-    <span class="k">print</span> <span class="s">&quot;Deleting cython files...&quot;</span>
-    <span class="c"># Just in case the build directory was created by accident,</span>
-    <span class="c"># note that shell=True should be OK here because the command is constant.</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;rm -rf build&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;rm -rf *.c&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
-    <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="s">&quot;rm -rf *.so&quot;</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">executable</span><span class="o">=</span><span class="s">&quot;/bin/bash&quot;</span><span class="p">)</span>
-
-    <span class="c"># Now do a normal clean</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;clean&quot;</span>
-
-<span class="c"># We want to always use build_ext --inplace</span>
-<span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s">&quot;build_ext&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s">&quot;--inplace&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="s">&quot;build_ext&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;--inplace&quot;</span><span class="p">)</span>
-
-<span class="c"># Only build for 64-bit target</span>
-<span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;ARCHFLAGS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&quot;-arch x86_64&quot;</span>
-
-<span class="c"># Set up extension and build</span>
-<span class="n">cy_ext</span> <span class="o">=</span> <span class="n">Extension</span><span class="p">(</span><span class="s">&quot;cy_ext&quot;</span><span class="p">,</span>
-                   <span class="p">[</span><span class="s">&quot;cy_ext.pyx&quot;</span><span class="p">],</span>
-                   <span class="n">include_dirs</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">get_include</span><span class="p">()],</span>
-                   <span class="c">#extra_compile_args=[&quot;-g&quot;],</span>
-                   <span class="c">#extra_link_args=[&quot;-g&quot;]</span>
-                   <span class="p">)</span>
-
-<span class="n">setup</span><span class="p">(</span><span class="n">cmdclass</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;build_ext&#39;</span><span class="p">:</span> <span class="n">build_ext</span><span class="p">},</span>
-      <span class="n">ext_modules</span><span class="o">=</span><span class="p">[</span><span class="n">cy_ext</span><span class="p">])</span>
-</pre></div></div>
+  <div class="entry-content"><p>In order to get line numbers when using Valgrind to debug Python
+extensions written in c/c++ you need to compile the extension with <em>both</em> the
+<code>-O0</code> and the <code>-g</code> flags.</p></div>
     <footer>
 <p class="meta">
   <span class="byline author vcard">
     Posted by <span class="fn">Nick Foti</span>
   </span>
-<time datetime="2013-02-07T16:32:00-08:00" pubdate>07 February 2013 04-32 PM</time>  <span class="categories">
-    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/cython.html">cython</a>
+<time datetime="2015-01-06T20:17:00-08:00" pubdate>06 January 2015 08-17 PM</time>  <span class="categories">
+    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/valgrind.html">valgrind</a>
   </span>
 </p><div class="sharing">
 </div>    </footer>

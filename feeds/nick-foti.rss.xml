@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>(A Creative Blog Name Here)</title><link>http://nfoti.github.io/a-creative-blog-name/</link><description>Code, math, and other things I find useful</description><atom:link href="http://nfoti.github.io/a-creative-blog-name/feeds/nick-foti.rss.xml" rel="self"></atom:link><lastBuildDate>Wed, 12 Nov 2014 09:44:00 -0800</lastBuildDate><item><title>Eigen Weirdness #1: Broadcasting</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/</link><description>&lt;p&gt;I have needed to implement some of my research code in C++ and I have been
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>(A Creative Blog Name Here)</title><link>http://nfoti.github.io/a-creative-blog-name/</link><description>Code, math, and other things I find useful</description><atom:link href="http://nfoti.github.io/a-creative-blog-name/feeds/nick-foti.rss.xml" rel="self"></atom:link><lastBuildDate>Tue, 06 Jan 2015 20:17:00 -0800</lastBuildDate><item><title>Debugging Python Extensions With Valgrind</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/</link><description>&lt;p&gt;In order to get line numbers when using Valgrind to debug Python
+extensions written in c/c++ you need to compile the extension with &lt;em&gt;both&lt;/em&gt; the
+&lt;code&gt;-O0&lt;/code&gt; and the &lt;code&gt;-g&lt;/code&gt; flags.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Tue, 06 Jan 2015 20:17:00 -0800</pubDate><guid>tag:nfoti.github.io,2015-01-06:a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/</guid><category>valgrind</category></item><item><title>Eigen Weirdness #1: Broadcasting</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/</link><description>&lt;p&gt;I have needed to implement some of my research code in C++ and I have been
 using the &lt;a href="http://eigen.tuxfamily.org"&gt;Eigen&lt;/a&gt; library for linear algebra.
 There are a lot of great things about Eigen, however, there are some hang-ups
 I have run into that do not seem to be documented anywhere.  As I run into
@@ -47,37 +49,7 @@ reiterate the main point: &lt;strong&gt;when broadcasting, the visitor must be o
 hand side of the operator being used&lt;/strong&gt;.  This is not the case with both Matlab
 or python where &lt;code&gt;repmat(a, 2, 1) .* A&lt;/code&gt; and &lt;code&gt;a * A&lt;/code&gt; will work as well.&lt;/p&gt;
 &lt;p&gt;Hopefully, this is just an oversight and there is an easy fix, and not a
-shortcoming of the expression generation that Eigen performs.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Wed, 12 Nov 2014 09:44:00 -0800</pubDate><guid>tag:nfoti.github.io,2014-11-12:a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/</guid><category>eigen</category></item><item><title>Calling Rmath from cython (sometimes R just does it better)</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</link><description>&lt;p&gt;Recently I was writing some code that required the quantile function of the
+shortcoming of the expression generation that Eigen performs.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Wed, 12 Nov 2014 09:44:00 -0800</pubDate><guid>tag:nfoti.github.io,2014-11-12:a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/</guid><category>eigen</category></item><item><title>Calling Rmath from cython (sometimes R just does it better)</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</link><description>&lt;p&gt;Recently I was writing some code that required the quantile function of the
 chi-squared distribution.  There is a function in ccipy that implements this
 function, however, calling a python function from cython is slow.  The scipy
 implementation calls a function in the cephes library.  Unfortunately, scipy
@@ -215,37 +187,7 @@ examples)&lt;/p&gt;
 &lt;p&gt;results in a blank figure on the screen.  In order to see the results one
 must manually draw the axes which can be done with the &lt;code&gt;plt.draw&lt;/code&gt; function
 (or with &lt;code&gt;plt.plot([],[])&lt;/code&gt;).  I have no idea why this is the case, but 
-hopefully it will be fixed at some point.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Fri, 14 Dec 2012 10:13:00 -0800</pubDate><guid>tag:nfoti.github.io,2012-12-14:a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/</guid><category>matplotlib</category><category>ipython</category></item><item><title>Embedded gist appearance</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/</link><description>&lt;hr /&gt;
+hopefully it will be fixed at some point.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Fri, 14 Dec 2012 10:13:00 -0800</pubDate><guid>tag:nfoti.github.io,2012-12-14:a-creative-blog-name/posts/2012/12/14/matplotlib-3d-plots-in-ipython/</guid><category>matplotlib</category><category>ipython</category></item><item><title>Embedded gist appearance</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/</link><description>&lt;hr /&gt;
 &lt;p&gt;Some of the posts on this blog include embedded gists to display code.
 Apparently GitHub has changed something about gists and now the syntax
 highlighting is all messed up.  Hopefully there will be a fix in the 
@@ -306,37 +248,7 @@ wraps the GSL library for use with Cython.  Installation is simple&lt;/p&gt;
 
 &lt;p&gt;I have also added this to my behemoth 
 &lt;a href="/blog/2012/07/17/setting-up-virtualenv-for-data-analysis-on-osx/"&gt;instructions&lt;/a&gt;
-on setting up python.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Tue, 14 Aug 2012 16:56:00 -0700</pubDate><guid>tag:nfoti.github.io,2012-08-14:a-creative-blog-name/posts/2012/08/14/cython-and-gsl-made-easy/</guid><category>cython</category><category>gsl</category></item><item><title>Python build targets</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2012/07/25/python-build-targets/</link><description>&lt;p&gt;While writing the code for my
+on setting up python.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Tue, 14 Aug 2012 16:56:00 -0700</pubDate><guid>tag:nfoti.github.io,2012-08-14:a-creative-blog-name/posts/2012/08/14/cython-and-gsl-made-easy/</guid><category>cython</category><category>gsl</category></item><item><title>Python build targets</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2012/07/25/python-build-targets/</link><description>&lt;p&gt;While writing the code for my
 &lt;a href="/blog/2012/07/24/cythonizing-instance-methods/"&gt;last&lt;/a&gt; 
 post on Cython I encountered something strange regarding distutils.  The code
 linked to the GSL library which on my machine (running OSX) is a unversal
@@ -356,37 +268,7 @@ due to using the wrong architecture when the 32-bit version is built.&lt;/p&gt;
 
 &lt;p&gt;This causes only the 64-bit version of the extension to be built.
 I'm sure there is a way to make distutils only build 64-bit versions by
-default, but I haven't found it yet.  When I do I will update the post.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Wed, 25 Jul 2012 09:30:00 -0700</pubDate><guid>tag:nfoti.github.io,2012-07-25:a-creative-blog-name/posts/2012/07/25/python-build-targets/</guid><category></category></item><item><title>Cythonizing instance methods</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/</link><description>&lt;p&gt;A large amount of my work involves writing MCMC samplers.  The models I work
+default, but I haven't found it yet.  When I do I will update the post.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Wed, 25 Jul 2012 09:30:00 -0700</pubDate><guid>tag:nfoti.github.io,2012-07-25:a-creative-blog-name/posts/2012/07/25/python-build-targets/</guid><category></category></item><item><title>Cythonizing instance methods</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/</link><description>&lt;p&gt;A large amount of my work involves writing MCMC samplers.  The models I work
 with have a lot of parameters and the samplers require a lot of state to be
 recorded.  Normally, I stuff all of the parameters and state into a Python
 class and implement the different steps of the sampler as instance methods.
@@ -729,34 +611,4 @@ things like the gamma function, or you can use it to generate random numbers
 
 
 &lt;h4&gt;Finished&lt;/h4&gt;
-&lt;p&gt;Ok, that's it, we have a pretty complete system for data analysis and research.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Tue, 17 Jul 2012 14:35:00 -0700</pubDate><guid>tag:nfoti.github.io,2012-07-17:a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/</guid><category>virtualenv</category><category>osx</category></item></channel></rss>
+&lt;p&gt;Ok, that's it, we have a pretty complete system for data analysis and research.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Tue, 17 Jul 2012 14:35:00 -0700</pubDate><guid>tag:nfoti.github.io,2012-07-17:a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/</guid><category>virtualenv</category><category>osx</category></item></channel></rss>

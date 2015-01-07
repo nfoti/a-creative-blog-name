@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/python.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2013-08-19T13:54:00-07:00</updated><entry><title>Calling Rmath from cython (sometimes R just does it better)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/" rel="alternate"></link><updated>2013-08-19T13:54:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-08-19:a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</id><summary type="html">&lt;p&gt;Recently I was writing some code that required the quantile function of the
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/python.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2015-01-06T20:17:00-08:00</updated><entry><title>Debugging Python Extensions With Valgrind</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/" rel="alternate"></link><updated>2015-01-06T20:17:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-01-06:a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/</id><summary type="html">&lt;p&gt;In order to get line numbers when using Valgrind to debug Python
+extensions written in c/c++ you need to compile the extension with &lt;em&gt;both&lt;/em&gt; the
+&lt;code&gt;-O0&lt;/code&gt; and the &lt;code&gt;-g&lt;/code&gt; flags.&lt;/p&gt;</summary><category term="valgrind"></category></entry><entry><title>Calling Rmath from cython (sometimes R just does it better)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/" rel="alternate"></link><updated>2013-08-19T13:54:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-08-19:a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</id><summary type="html">&lt;p&gt;Recently I was writing some code that required the quantile function of the
 chi-squared distribution.  There is a function in ccipy that implements this
 function, however, calling a python function from cython is slow.  The scipy
 implementation calls a function in the cephes library.  Unfortunately, scipy
@@ -123,37 +125,7 @@ examples)&lt;/p&gt;
 &lt;p&gt;results in a blank figure on the screen.  In order to see the results one
 must manually draw the axes which can be done with the &lt;code&gt;plt.draw&lt;/code&gt; function
 (or with &lt;code&gt;plt.plot([],[])&lt;/code&gt;).  I have no idea why this is the case, but 
-hopefully it will be fixed at some point.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</summary><category term="matplotlib"></category><category term="ipython"></category></entry><entry><title>Extracting keys from Python dict into interpreter namespace</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/" rel="alternate"></link><updated>2012-10-31T10:36:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-10-31:a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/</id><summary type="html">&lt;p&gt;I run a lot of experiments in ipython, the results of which I pickle and save
+hopefully it will be fixed at some point.&lt;/p&gt;</summary><category term="matplotlib"></category><category term="ipython"></category></entry><entry><title>Extracting keys from Python dict into interpreter namespace</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/" rel="alternate"></link><updated>2012-10-31T10:36:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-10-31:a-creative-blog-name/posts/2012/10/31/extracting-keys-from-python-dict-into-interpreter-namespace/</id><summary type="html">&lt;p&gt;I run a lot of experiments in ipython, the results of which I pickle and save
 to disk.  When I reload the results with pickle I end up with a dict whose keys
 are the variable names that I saved.  It is tedious to have to reference these
 values through the dict, what I would really like is behavior like &lt;code&gt;load&lt;/code&gt;
@@ -195,37 +167,7 @@ wraps the GSL library for use with Cython.  Installation is simple&lt;/p&gt;
 
 &lt;p&gt;I have also added this to my behemoth 
 &lt;a href="/blog/2012/07/17/setting-up-virtualenv-for-data-analysis-on-osx/"&gt;instructions&lt;/a&gt;
-on setting up python.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</summary><category term="cython"></category><category term="gsl"></category></entry><entry><title>Python build targets</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/25/python-build-targets/" rel="alternate"></link><updated>2012-07-25T09:30:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-25:a-creative-blog-name/posts/2012/07/25/python-build-targets/</id><summary type="html">&lt;p&gt;While writing the code for my
+on setting up python.&lt;/p&gt;</summary><category term="cython"></category><category term="gsl"></category></entry><entry><title>Python build targets</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/25/python-build-targets/" rel="alternate"></link><updated>2012-07-25T09:30:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-25:a-creative-blog-name/posts/2012/07/25/python-build-targets/</id><summary type="html">&lt;p&gt;While writing the code for my
 &lt;a href="/blog/2012/07/24/cythonizing-instance-methods/"&gt;last&lt;/a&gt; 
 post on Cython I encountered something strange regarding distutils.  The code
 linked to the GSL library which on my machine (running OSX) is a unversal
@@ -245,37 +187,7 @@ due to using the wrong architecture when the 32-bit version is built.&lt;/p&gt;
 
 &lt;p&gt;This causes only the 64-bit version of the extension to be built.
 I'm sure there is a way to make distutils only build 64-bit versions by
-default, but I haven't found it yet.  When I do I will update the post.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</summary><category term=""></category></entry><entry><title>Cythonizing instance methods</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/" rel="alternate"></link><updated>2012-07-24T20:45:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-24:a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/</id><summary type="html">&lt;p&gt;A large amount of my work involves writing MCMC samplers.  The models I work
+default, but I haven't found it yet.  When I do I will update the post.&lt;/p&gt;</summary><category term=""></category></entry><entry><title>Cythonizing instance methods</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/" rel="alternate"></link><updated>2012-07-24T20:45:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2012-07-24:a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/</id><summary type="html">&lt;p&gt;A large amount of my work involves writing MCMC samplers.  The models I work
 with have a lot of parameters and the samplers require a lot of state to be
 recorded.  Normally, I stuff all of the parameters and state into a Python
 class and implement the different steps of the sampler as instance methods.
@@ -590,34 +502,4 @@ things like the gamma function, or you can use it to generate random numbers
 
 
 &lt;h4&gt;Finished&lt;/h4&gt;
-&lt;p&gt;Ok, that's it, we have a pretty complete system for data analysis and research.&lt;/p&gt;&lt;script type= "text/javascript"&gt;
-    if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
-        var mathjaxscript = document.createElement('script');
-        mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
-        mathjaxscript.type = 'text/javascript';
-        mathjaxscript.src = 'https:' == document.location.protocol
-                ? 'https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML'
-                : 'http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
-        mathjaxscript[(window.opera ? "innerHTML" : "text")] =
-            "MathJax.Hub.Config({" +
-            "    config: ['MMLorHTML.js']," +
-            "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
-            "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
-            "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
-            "    displayAlign: 'center'," +
-            "    displayIndent: '0em'," +
-            "    showMathMenu: true," +
-            "    tex2jax: { " +
-            "        inlineMath: [ ['$','$'] ], " +
-            "        displayMath: [ ['$$','$$'] ]," +
-            "        processEscapes: true," +
-            "        preview: 'TeX'," +
-            "    }, " +
-            "    'HTML-CSS': { " +
-            "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
-            "    } " +
-            "}); ";
-        (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
-    }
-&lt;/script&gt;
-</summary><category term="virtualenv"></category><category term="osx"></category></entry></feed>
+&lt;p&gt;Ok, that's it, we have a pretty complete system for data analysis and research.&lt;/p&gt;</summary><category term="virtualenv"></category><category term="osx"></category></entry></feed>

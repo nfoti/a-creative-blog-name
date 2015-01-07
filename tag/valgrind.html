@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>(A Creative Blog Name Here) - Articles by Nick Foti</title>
+  <title>(A Creative Blog Name Here) - valgrind</title>
   <meta name="author" content="Nick Foti">
 
   <link href="http://nfoti.github.io/a-creative-blog-name/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
@@ -78,100 +78,17 @@
   		<article>
 <header>
       <h1 class="entry-title">
-        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/25/python-build-targets/">Python build targets</a>
+        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/">Debugging Python Extensions With Valgrind</a>
       </h1>
-      <p class="meta"><time datetime="2012-07-25T09:30:00-07:00" pubdate>25 July 2012 09-30 AM</time></p>
+      <p class="meta"><time datetime="2015-01-06T20:17:00-08:00" pubdate>06 January 2015 08-17 PM</time></p>
 </header>
 
-  <div class="entry-content"><p>While writing the code for my
-<a href="/blog/2012/07/24/cythonizing-instance-methods/">last</a> 
-post on Cython I encountered something strange regarding distutils.  The code
-linked to the GSL library which on my machine (running OSX) is a unversal
-library containing both 32- and 64-bit versions.  When I run</p>
-<div class="highlight"><pre><span class="nv">$ </span>python setup.py build_ext --inplace
-</pre></div>
-
-
-<p>distutils attempts to ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/25/python-build-targets/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/">Cythonizing instance methods</a>
-      </h1>
-      <p class="meta"><time datetime="2012-07-24T20:45:00-07:00" pubdate>24 July 2012 08-45 PM</time></p>
-</header>
-
-  <div class="entry-content"><p>A large amount of my work involves writing MCMC samplers.  The models I work
-with have a lot of parameters and the samplers require a lot of state to be
-recorded.  Normally, I stuff all of the parameters and state into a Python
-class and implement the different steps of ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/24/cythonizing-instance-methods/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/">Using syntastic with vim (and a vim bug on OSX)</a>
-      </h1>
-      <p class="meta"><time datetime="2012-07-22T13:21:00-07:00" pubdate>22 July 2012 01-21 PM</time></p>
-</header>
-
-  <div class="entry-content"><p>Syntastic is a syntax checking plugin for vim that supports many different
-languages.  I decided to give it a try in my current vim setup for my current
-projects written in python.  Additionally, I decided to try out 
-<a href="http://pypi.python.org/pypi/flake8/">flake8</a>, a wrapper for pyflakes, 
-pep8 and mccabe.</p>
-<p>Setting up flake8 is ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/22/using-syntastic-with-vim-(and-a-vim-bug-on-osx)/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/19/ipython-parallel/">IPython parallel</a>
-      </h1>
-      <p class="meta"><time datetime="2012-07-19T14:01:00-07:00" pubdate>19 July 2012 02-01 PM</time></p>
-</header>
-
-  <div class="entry-content"><p>When I start IPython the first two commands I run are</p>
-<div class="highlight"><pre><span class="o">%</span><span class="n">load_ext</span> <span class="n">autoreload</span>
-<span class="o">%</span><span class="n">autoreload</span> <span class="mi">2</span>
-</pre></div>
-
-
-<p>which forces IPython to reload code before running it so that the newest
-version is always used.
-However, when developing code to run in parallel with the IPython.parallel 
-module on a cluster started with ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/19/ipython-parallel/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/">Setting up python in virtualenv for data analysis on OSX</a>
-      </h1>
-      <p class="meta"><time datetime="2012-07-17T14:35:00-07:00" pubdate>17 July 2012 02-35 PM</time></p>
-</header>
-
-  <div class="entry-content"><p>I have decided to use python for my research code as I have become fed up with
-needing an internet connection to work with Matlab and not being able to
-check out a license for toolboxes I need (e.g. the statistics toolbox) right
-before a paper deadline.  I have ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2012/07/17/setting-up-python-in-virtualenv-for-data-analysis-on-osx/">Read On &crarr;</a>
-  </footer>
+  <div class="entry-content"><p>In order to get line numbers when using Valgrind to debug Python
+extensions written in c/c++ you need to compile the extension with <em>both</em> the
+<code>-O0</code> and the <code>-g</code> flags.</p></div>
   		</article>
 <div class="pagination">
 
-    <a class="next" href="http://nfoti.github.io/a-creative-blog-name/author/nick-foti.html">Newer &rarr;</a>
   <br />
 </div></div>
 <aside class="sidebar">
@@ -180,18 +97,6 @@ before a paper deadline.  I have ...</p></div>
     <ul id="recent_posts">
       <li class="post">
           <a href="http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/">Debugging Python Extensions With Valgrind</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/">Eigen Weirdness #1: Broadcasting</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/">Calling Rmath from cython (sometimes R just does it better)</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/06/27/types-as-function-arguments-in-julia/">Types as function arguments in Julia</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/02/07/cleaning-cython-build-files/">Cleaning Cython Build Files</a>
       </li>
     </ul>
   </section>
@@ -226,7 +131,7 @@ before a paper deadline.  I have ...</p></div>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2012-2015  - Nick Foti -
+    Copyright &copy;  2015  - Nick Foti -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
 </body>
