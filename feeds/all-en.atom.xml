@@ -17,8 +17,8 @@ of the limit inferior we have that &lt;span class="math"&gt;\(\forall \epsilon &
 \end{aligned}
 $$&lt;/div&gt;
 &lt;p&gt;
-But this is opposite of what we assumed, so that &lt;span class="math"&gt;\(\liminf_{n\rightarrow \infty}
-a_n = 0\)&lt;/span&gt;.&lt;/p&gt;
+But we assumed that the original sum converged, implying that
+&lt;span class="math"&gt;\(\liminf_{n\rightarrow \infty} a_n = 0\)&lt;/span&gt;.&lt;/p&gt;
 &lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
     var align = "center",
         indent = "0em",
