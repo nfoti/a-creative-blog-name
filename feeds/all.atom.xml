@@ -11,14 +11,14 @@ of the limit inferior we have that &lt;span class="math"&gt;\(\forall \epsilon &
 &lt;span class="math"&gt;\(n &amp;gt; N\)&lt;/span&gt;, &lt;span class="math"&gt;\(a_n &amp;gt; c - \epsilon\)&lt;/span&gt;.  This implies that
 &lt;/p&gt;
 &lt;div class="math"&gt;$$
-1
+\sum_{n=1}^\infty \frac{1}{n} a_n \geq
 $$&lt;/div&gt;
 &lt;p&gt;
 But this is opposite of what we assumed, so that &lt;span class="math"&gt;\(\liminf_{n\rightarrow \infty}
 a_n = 0\)&lt;/span&gt;.&lt;/p&gt;
 &lt;!--
 begin{equation}
-  \sum_{n=1}^\infty \frac{1}{n} a_n \geq \sum_{n'=N}^\infty \frac{1}{n'}a_{n'}
+   \sum_{n'=N}^\infty \frac{1}{n'}a_{n'}
   &gt; (c - \epsilon) \sum_{n'=N}^\infty \frac{1}{n'} = \infty.
 end{equation}
 --&gt;
