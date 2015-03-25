@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/all-en.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2015-01-06T20:17:00-08:00</updated><entry><title>Debugging Python Extensions With Valgrind</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/" rel="alternate"></link><updated>2015-01-06T20:17:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-01-06:a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/</id><summary type="html">&lt;p&gt;In order to get line numbers when using Valgrind to debug Python
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/all-en.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2015-03-24T18:12:00-07:00</updated><entry><title>Convergent Series and lim inf</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/" rel="alternate"></link><updated>2015-03-24T18:12:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-03-24:a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/</id><summary type="html">&lt;p&gt;This little result came up when proving the convergence of a stochastic
+gradient algorithm and I want to write it down to remember it after discussions
+with Matt Johnson and Alex Tank.&lt;/p&gt;
+&lt;p&gt;Let &lt;span class="math"&gt;\(a_1, a_2, \ldots\)&lt;/span&gt; be a positive sequence of numbers.
+If &lt;span class="math"&gt;\(\sum_{n=1}^\infty \frac{1}{n} a_n &amp;lt; \infty\)&lt;/span&gt;, then &lt;span class="math"&gt;\(\liminf_{n\rightarrow
+\infty} a_n = 0\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;The proof is by contrapositive.  Assume that
+&lt;span class="math"&gt;\(\liminf{n \rightarrow \infty} = c 0\)&lt;/span&gt;.  Then by the &lt;span class="math"&gt;\(\epsilon\)&lt;/span&gt; characterization
+of &lt;span class="math"&gt;\(\liminf\)&lt;/span&gt; we have that &lt;span class="math"&gt;\(\forall \epsilon &amp;gt; 0\)&lt;/span&gt;, &lt;span class="math"&gt;\(\exists N\)&lt;/span&gt; such that for
+&lt;span class="math"&gt;\(n &amp;gt; N\)&lt;/span&gt; &lt;span class="math"&gt;\(a_n &amp;gt; c - \epsilon\)&lt;/span&gt;.  This implies that
+$$
+  \sum_{n=1}^\infty \frac{1}{n} a_n \geq \sum_{n'=N}^\infty \frac{1}{n'}a_{n'}&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(c - \epsilon) \sum_{n'=N}^\infty \frac{1}{n'} = \infty.
+&lt;span class="math"&gt;\($
+But this is opposite of what we assumed, so that $\liminf_{n\rightarrow \infty}
+a_n = 0\)&lt;/span&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: 'center'," +
+        "    displayIndent: '0em'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'black ! important'} }" +
+        "    } " +
+        "}); ";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</summary><category term="stochastic gradient-descent"></category></entry><entry><title>Debugging Python Extensions With Valgrind</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/" rel="alternate"></link><updated>2015-01-06T20:17:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-01-06:a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/</id><summary type="html">&lt;p&gt;In order to get line numbers when using Valgrind to debug Python
 extensions written in c/c++ you need to compile the extension with &lt;em&gt;both&lt;/em&gt; the
 &lt;code&gt;-O0&lt;/code&gt; and the &lt;code&gt;-g&lt;/code&gt; flags.&lt;/p&gt;</summary><category term="valgrind"></category></entry><entry><title>Eigen Weirdness #1: Broadcasting</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/" rel="alternate"></link><updated>2014-11-12T09:44:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2014-11-12:a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/</id><summary type="html">&lt;p&gt;I have needed to implement some of my research code in C++ and I have been
 using the &lt;a href="http://eigen.tuxfamily.org"&gt;Eigen&lt;/a&gt; library for linear algebra.

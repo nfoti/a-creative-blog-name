@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Extracting keys from Python dict into interpreter namespace</title>
+  <title>(A Creative Blog Name Here)</title>
   <meta name="author" content="Nick Foti">
 
   <link href="http://nfoti.github.io/a-creative-blog-name/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
@@ -62,13 +62,13 @@
     <li >
     <a href="http://nfoti.github.io/a-creative-blog-name/category/julia.html">Julia</a>
     </li>
-    <li >
+    <li class="active">
     <a href="http://nfoti.github.io/a-creative-blog-name/category/math.html">Math</a>
     </li>
     <li >
     <a href="http://nfoti.github.io/a-creative-blog-name/category/octopress.html">Octopress</a>
     </li>
-    <li class="active">
+    <li >
     <a href="http://nfoti.github.io/a-creative-blog-name/category/python.html">Python</a>
     </li>
     <li >
@@ -77,76 +77,34 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article class="hentry" role="article">
+<div class="blog-index">
+  		<article>
 <header>
-      <h1 class="entry-title">Extracting keys from Python dict into interpreter namespace</h1>
-      <p class="meta"><time datetime="2012-10-31T10:36:00-07:00" pubdate>31 October 2012 10-36 AM</time></p>
+      <h1 class="entry-title">
+        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/">Convergent Series and lim inf</a>
+      </h1>
+      <p class="meta"><time datetime="2015-03-24T18:12:00-07:00" pubdate>24 March 2015 06-12 PM</time></p>
 </header>
 
-  <div class="entry-content"><p>I run a lot of experiments in ipython, the results of which I pickle and save
-to disk.  When I reload the results with pickle I end up with a dict whose keys
-are the variable names that I saved.  It is tedious to have to reference these
-values through the dict, what I would really like is behavior like <code>load</code>
-in Matlab such that when I load the pickle file the variables are available in
-the global namespace.</p>
-<p>I figured this was possible in Python but had no idea how to do this until 
-I found
-<a href="http://stackoverflow.com/questions/4357851/creating-or-assigning-variables-from-a-dictionary-in-python">this</a> 
-question on stack overflow that answers the question.</p>
-<p>``` python Load pickle file variables into global namespace
-    try:
-        import cPickle as pickle
-    except ImportError:
-        import pickle</p>
-<div class="highlight"><pre><span class="n">def</span> <span class="n">loadvars</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">namespace</span><span class="o">=</span><span class="n">None</span><span class="p">)</span><span class="o">:</span>
-    <span class="k">if</span> <span class="n">namespace</span> <span class="n">is</span> <span class="n">None</span><span class="o">:</span>
-        <span class="n">namespace</span> <span class="o">=</span> <span class="n">globals</span><span class="p">()</span>
+  <div class="entry-content"><p>This little result came up when proving the convergence of a stochastic
+gradient algorithm and I want to write it down to remember it after discussions
+with Matt Johnson and Alex Tank.</p>
+<p>Let <span class="math">\(a_1, a_2, \ldots\)</span> be a positive sequence of numbers.
+If <span class="math">\(\sum_{n=1}^\infty \frac{1}{n ...</span></p></div>
+  <footer>
+    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
 
-    <span class="n">with</span> <span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="sc">&#39;r&#39;</span><span class="p">)</span> <span class="n">as</span> <span class="n">f</span><span class="o">:</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">pickle</span><span class="p">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-        <span class="n">namespace</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-</pre></div>
-
-
-<p>```</p>
-<p>If you try to put this code in a module and import the function then you will
-have to pass <code>globals()</code> to the function explicitly as the <code>globals()</code>
-in the function is not the IPython global namespace.  However, you can put the
-above code inside your ~/.ipython/profile_PROFILE/startup/startup.ipy file and
-it will work as expected.  PROFILE is the name of the profile that you plan to
-start IPython with.</p></div>
-    <footer>
-<p class="meta">
-  <span class="byline author vcard">
-    Posted by <span class="fn">Nick Foti</span>
-  </span>
-<time datetime="2012-10-31T10:36:00-07:00" pubdate>31 October 2012 10-36 AM</time>  <span class="categories">
-    <a class="category" href="http://nfoti.github.io/a-creative-blog-name/tag/ipython.html">ipython</a>
-  </span>
-</p><div class="sharing">
-</div>    </footer>
-  </article>
-
-</div>
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
           <a href="http://nfoti.github.io/a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/">Convergent Series and lim inf</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/">Debugging Python Extensions With Valgrind</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2014/11/12/c++-eigen-weirdness-1-broadcasting/">Eigen Weirdness #1: Broadcasting</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2014/08/15/foti/">Migrating the Blog to Github Pages</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/">Calling Rmath from cython (sometimes R just does it better)</a>
       </li>
     </ul>
   </section>
@@ -182,7 +140,7 @@ start IPython with.</p></div>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2012-2015  - Nick Foti -
+    Copyright &copy;  2015  - Nick Foti -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
 </body>
