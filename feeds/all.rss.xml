@@ -1,5 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>(A Creative Blog Name Here)</title><link>http://nfoti.github.io/a-creative-blog-name/</link><description>Code, math, and other things I find useful</description><atom:link href="http://nfoti.github.io/a-creative-blog-name/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Tue, 24 Mar 2015 18:12:00 -0700</lastBuildDate><item><title>Convergent Series and lim inf</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/</link><description>&lt;p&gt;This little result came up when proving the convergence of a stochastic
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>(A Creative Blog Name Here)</title><link>http://nfoti.github.io/a-creative-blog-name/</link><description>Code, math, and other things I find useful</description><atom:link href="http://nfoti.github.io/a-creative-blog-name/feeds/all.rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 29 Aug 2015 13:48:00 -0700</lastBuildDate><item><title>Fixing IPython plot windows after OS X upgrade</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2015/08/29/fixing-ipython-plot-windows-after-os-x-upgrade/</link><description>&lt;p&gt;&lt;em&gt;Note:&lt;/em&gt;  These instructions are for the Conda Python environment manager.
+They should be adaptable to Virtualenv installations or others as well.&lt;/p&gt;
+&lt;p&gt;Often after installing OS X upgrades plots created in IPython open behind all
+windows and cannot be tabbed to.  The following instructions should fix this:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Remove the current &lt;code&gt;python&lt;/code&gt; symlink in the Conda environment's &lt;code&gt;bin/&lt;/code&gt;
+   director.&lt;/li&gt;
+&lt;li&gt;Create a new &lt;code&gt;python&lt;/code&gt; symlink in the same directory that points to
+   &lt;code&gt;pythonw&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;Uninstall the &lt;code&gt;ipython&lt;/code&gt; package (it won't run at all after creating the
+   symlink).&lt;/li&gt;
+&lt;li&gt;Install the &lt;code&gt;ipython&lt;/code&gt; package.  This should set everything up correctly to
+   use the new &lt;code&gt;python&lt;/code&gt; link created above.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now plots should open an icon in the Dock and can be tabbed to.&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Sat, 29 Aug 2015 13:48:00 -0700</pubDate><guid>tag:nfoti.github.io,2015-08-29:a-creative-blog-name/posts/2015/08/29/fixing-ipython-plot-windows-after-os-x-upgrade/</guid><category>Upgrading</category></item><item><title>Variational lower-bound for hidden Markov models</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2015/05/19/variational-lower-bound-for-hidden-markov-models/</link><description>&lt;p&gt;if you define the forward messages as the filtering distribution (like Beal),
+then the normalization constant from the update is &lt;span class="math"&gt;\(p(y_t | y_{1:t-1})\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;If you define the forward messages as the joint &lt;span class="math"&gt;\(p(y_{1:t}, x_t)\)&lt;/span&gt; like Emily does
+(and like Matt and we do), then the normalization constant is &lt;span class="math"&gt;\(p(y_{1:t})\)&lt;/span&gt; so
+that you need to divide to get the conditionals.  Note that in our case our
+messages are “unnormalized” at each time, so they’re the joint.  Write a blog
+post on this.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+    
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); ";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Nick Foti</dc:creator><pubDate>Tue, 19 May 2015 15:49:00 -0700</pubDate><guid>tag:nfoti.github.io,2015-05-19:a-creative-blog-name/posts/2015/05/19/variational-lower-bound-for-hidden-markov-models/</guid><category>"Hidden Markov Model"</category><category>"Variational Bayes"</category></item><item><title>Convergent Series and lim inf</title><link>http://nfoti.github.io/a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/</link><description>&lt;p&gt;This little result came up when proving the convergence of a stochastic
 gradient algorithm and I want to write it down to remember it after discussions
 with Matt Johnson and Alex Tank.&lt;/p&gt;
 &lt;p&gt;Let &lt;span class="math"&gt;\(a_1, a_2, \ldots\)&lt;/span&gt; be a positive sequence of numbers.

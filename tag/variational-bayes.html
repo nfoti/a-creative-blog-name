@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>(A Creative Blog Name Here)</title>
+  <title>(A Creative Blog Name Here) - "Variational Bayes"</title>
   <meta name="author" content="Nick Foti">
 
   <link href="http://nfoti.github.io/a-creative-blog-name/feeds/all.atom.xml" type="application/atom+xml" rel="alternate"
@@ -65,7 +65,7 @@
     <li >
     <a href="http://nfoti.github.io/a-creative-blog-name/category/math.html">Math</a>
     </li>
-    <li class="active">
+    <li >
     <a href="http://nfoti.github.io/a-creative-blog-name/category/octopress.html">Octopress</a>
     </li>
     <li >
@@ -81,37 +81,17 @@
   		<article>
 <header>
       <h1 class="entry-title">
-        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/">Embedded gist appearance</a>
+        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2015/05/19/variational-lower-bound-for-hidden-markov-models/">Variational lower-bound for hidden Markov models</a>
       </h1>
-      <p class="meta"><time datetime="2012-12-13T18:19:00-08:00" pubdate>13 December 2012 06-19 PM</time></p>
+      <p class="meta"><time datetime="2015-05-19T15:49:00-07:00" pubdate>19 May 2015 03-49 PM</time></p>
 </header>
 
-  <div class="entry-content"><hr />
-<p>Some of the posts on this blog include embedded gists to display code.
-Apparently GitHub has changed something about gists and now the syntax
-highlighting is all messed up.  Hopefully there will be a fix in the 
-near future, but in the mean time we're just going to have ...</p></div>
+  <div class="entry-content"><p>if you define the forward messages as the filtering distribution (like Beal),
+then the normalization constant from the update is <span class="math">\(p(y_t | y_{1:t-1})\)</span>.</p>
+<p>If you define the forward messages as the joint <span class="math">\(p(y_{1:t}, x_t)\)</span> like Emily does
+(and like Matt and we do), then the ...</p></div>
   <footer>
-    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/">Building octopress blog with rake</a>
-      </h1>
-      <p class="meta"><time datetime="2012-10-31T18:39:00-07:00" pubdate>31 October 2012 06-39 PM</time></p>
-</header>
-
-  <div class="entry-content"><p>If you experience the symptoms in octopress issue
-<a href="https://github.com/imathis/octopress/issues/759">#759</a>, i.e. <code>rake
-generate</code> breaks because <code>ffi</code> tries to load <code>lib.dylib</code>, you 
-should check that the shell you are trying to build your blog from </p>
-<ol>
-<li>is not running a tmux session (the wrong ruby will be used)</li>
-<li>does not have ...</li></ol></div>
-  <footer>
-    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/">Read On &crarr;</a>
+    <a rel="full-article" href="http://nfoti.github.io/a-creative-blog-name/posts/2015/05/19/variational-lower-bound-for-hidden-markov-models/">Read On &crarr;</a>
   </footer>
   		</article>
 <div class="pagination">
@@ -123,10 +103,7 @@ should check that the shell you are trying to build your blog from </p>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/12/13/embedded-gist-appearance/">Embedded gist appearance</a>
-      </li>
-      <li class="post">
-          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2012/10/31/building-octopress-blog-with-rake/">Building octopress blog with rake</a>
+          <a href="http://nfoti.github.io/a-creative-blog-name/posts/2015/05/19/variational-lower-bound-for-hidden-markov-models/">Variational lower-bound for hidden Markov models</a>
       </li>
     </ul>
   </section>
@@ -162,7 +139,7 @@ should check that the shell you are trying to build your blog from </p>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2012  - Nick Foti -
+    Copyright &copy;  2015  - Nick Foti -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
 </body>

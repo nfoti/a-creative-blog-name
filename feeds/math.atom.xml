@@ -1,5 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/math.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2015-03-24T18:12:00-07:00</updated><entry><title>Convergent Series and lim inf</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/" rel="alternate"></link><updated>2015-03-24T18:12:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-03-24:a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/</id><summary type="html">&lt;p&gt;This little result came up when proving the convergence of a stochastic
+<feed xmlns="http://www.w3.org/2005/Atom"><title>(A Creative Blog Name Here)</title><link href="http://nfoti.github.io/a-creative-blog-name/" rel="alternate"></link><link href="http://nfoti.github.io/a-creative-blog-name/feeds/math.atom.xml" rel="self"></link><id>http://nfoti.github.io/a-creative-blog-name/</id><updated>2015-05-19T15:49:00-07:00</updated><entry><title>Variational lower-bound for hidden Markov models</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/05/19/variational-lower-bound-for-hidden-markov-models/" rel="alternate"></link><updated>2015-05-19T15:49:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-05-19:a-creative-blog-name/posts/2015/05/19/variational-lower-bound-for-hidden-markov-models/</id><summary type="html">&lt;p&gt;if you define the forward messages as the filtering distribution (like Beal),
+then the normalization constant from the update is &lt;span class="math"&gt;\(p(y_t | y_{1:t-1})\)&lt;/span&gt;.&lt;/p&gt;
+&lt;p&gt;If you define the forward messages as the joint &lt;span class="math"&gt;\(p(y_{1:t}, x_t)\)&lt;/span&gt; like Emily does
+(and like Matt and we do), then the normalization constant is &lt;span class="math"&gt;\(p(y_{1:t})\)&lt;/span&gt; so
+that you need to divide to get the conditionals.  Note that in our case our
+messages are “unnormalized” at each time, so they’re the joint.  Write a blog
+post on this.&lt;/p&gt;
+&lt;script type="text/javascript"&gt;if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width &lt; 768) ? "left" : align;
+        indent = (screen.width &lt; 768) ? "0em" : indent;
+        linebreak = (screen.width &lt; 768) ? 'true' : linebreak;
+    }
+    
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = '//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'AMS' } }," +
+        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); ";
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+&lt;/script&gt;</summary><category term='"Hidden Markov Model"'></category><category term='"Variational Bayes"'></category></entry><entry><title>Convergent Series and lim inf</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/" rel="alternate"></link><updated>2015-03-24T18:12:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-03-24:a-creative-blog-name/posts/2015/03/24/convergent-series-and-lim-inf/</id><summary type="html">&lt;p&gt;This little result came up when proving the convergence of a stochastic
 gradient algorithm and I want to write it down to remember it after discussions
 with Matt Johnson and Alex Tank.&lt;/p&gt;
 &lt;p&gt;Let &lt;span class="math"&gt;\(a_1, a_2, \ldots\)&lt;/span&gt; be a positive sequence of numbers.
