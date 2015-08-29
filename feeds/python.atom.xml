@@ -5,15 +5,15 @@ They should be adaptable to Virtualenv installations or others as well.&lt;/p&gt
 windows and cannot be tabbed to.  The following instructions should fix this:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Remove the current &lt;code&gt;python&lt;/code&gt; symlink in the Conda environment's &lt;code&gt;bin/&lt;/code&gt;
-   director.&lt;/li&gt;
-&lt;li&gt;Create a new &lt;code&gt;python&lt;/code&gt; symlink in the same directory that points to
+   directory.&lt;/li&gt;
+&lt;li&gt;Create a new &lt;code&gt;python&lt;/code&gt; symlink in that same directory that points to
    &lt;code&gt;pythonw&lt;/code&gt;.&lt;/li&gt;
 &lt;li&gt;Uninstall the &lt;code&gt;ipython&lt;/code&gt; package (it won't run at all after creating the
    symlink).&lt;/li&gt;
-&lt;li&gt;Install the &lt;code&gt;ipython&lt;/code&gt; package.  This should set everything up correctly to
+&lt;li&gt;Reinstall the &lt;code&gt;ipython&lt;/code&gt; package.  This should set everything up correctly to
    use the new &lt;code&gt;python&lt;/code&gt; link created above.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Now plots should open an icon in the Dock and can be tabbed to.&lt;/p&gt;</summary><category term="Upgrading"></category></entry><entry><title>Debugging Python Extensions With Valgrind</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/" rel="alternate"></link><updated>2015-01-06T20:17:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-01-06:a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/</id><summary type="html">&lt;p&gt;In order to get line numbers when using Valgrind to debug Python
+&lt;p&gt;Now IPython plots should open an icon in the Dock and can be tabbed to.&lt;/p&gt;</summary><category term="Upgrading"></category></entry><entry><title>Debugging Python Extensions With Valgrind</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/" rel="alternate"></link><updated>2015-01-06T20:17:00-08:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2015-01-06:a-creative-blog-name/posts/2015/01/06/debugging-python-valgrind/</id><summary type="html">&lt;p&gt;In order to get line numbers when using Valgrind to debug Python
 extensions written in c/c++ you need to compile the extension with &lt;em&gt;both&lt;/em&gt; the
 &lt;code&gt;-O0&lt;/code&gt; and the &lt;code&gt;-g&lt;/code&gt; flags.&lt;/p&gt;</summary><category term="valgrind"></category></entry><entry><title>Calling Rmath from cython (sometimes R just does it better)</title><link href="http://nfoti.github.io/a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/" rel="alternate"></link><updated>2013-08-19T13:54:00-07:00</updated><author><name>Nick Foti</name></author><id>tag:nfoti.github.io,2013-08-19:a-creative-blog-name/posts/2013/08/19/calling-rmath-from-cython/</id><summary type="html">&lt;p&gt;Recently I was writing some code that required the quantile function of the
 chi-squared distribution.  There is a function in ccipy that implements this

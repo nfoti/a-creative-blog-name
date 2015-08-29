@@ -90,15 +90,15 @@ They should be adaptable to Virtualenv installations or others as well.</p>
 windows and cannot be tabbed to.  The following instructions should fix this:</p>
 <ol>
 <li>Remove the current <code>python</code> symlink in the Conda environment's <code>bin/</code>
-   director.</li>
-<li>Create a new <code>python</code> symlink in the same directory that points to
+   directory.</li>
+<li>Create a new <code>python</code> symlink in that same directory that points to
    <code>pythonw</code>.</li>
 <li>Uninstall the <code>ipython</code> package (it won't run at all after creating the
    symlink).</li>
-<li>Install the <code>ipython</code> package.  This should set everything up correctly to
+<li>Reinstall the <code>ipython</code> package.  This should set everything up correctly to
    use the new <code>python</code> link created above.</li>
 </ol>
-<p>Now plots should open an icon in the Dock and can be tabbed to.</p></div>
+<p>Now IPython plots should open an icon in the Dock and can be tabbed to.</p></div>
     <footer>
 <p class="meta">
   <span class="byline author vcard">
